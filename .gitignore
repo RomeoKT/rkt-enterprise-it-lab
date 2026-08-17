@@ -1,0 +1,25 @@
+# VM files
+*.vmdk
+*.vmem
+*.vmss
+*.vmsn
+*.nvram
+*.vmx.lck
+*.lck
+
+#  system images
+*.iso
+*.img
+*.ova
+*.ovf
+
+# temp 
+*.log
+*.tmp
+
+# secrets
+.env
+*.key
+*.pem
+secrets/
+credentials/
