@@ -44,3 +44,41 @@ Voir le diagramme dans le dossier diagrams (architecture-v1.png).
 - Documenter les procédures de dépannage pour pas oublier
 
 Voilà, c'est mon lab, j'ai appris beaucoup en le construisant et en le cassant/réparant. Je continue à l'améliorer.
+
+## Current Implementation
+
+### Virtualisation
+
+J'ai VMware Workstation Pro avec mon lab. 6 VMs. 4 réseaux isolés host-only.
+
+### Réseaux
+
+- USERS: 10.10.10.0/24
+- SERVERS: 10.10.20.0/24
+- MGMT: 10.10.30.0/24
+- SECURITY: 10.10.40.0/24
+
+pfSense est le routeur. Chaque réseau a sa gateway (10.10.x.1). Les VMs sur USERS peuvent ping les autres réseaux via pfSense.
+
+### Pannes que j'ai réglées
+
+- Mauvaise gateway (j'avais mis la mauvaise IP)
+- Mauvais subnet mask (j'avais mis /16 au lieu de /24)
+- DNS qui marchait pas (serveur DNS incorrect)
+- Adresse IP en double (deux VMs avec la meme IP)
+- Carte réseau désactivée (j'avais oublié de l'activer)
+
+### Ce que j'ai vu dans Wireshark
+
+J'ai capturé et analysé:
+
+- ARP request/reply (qui a quelle MAC)
+- ICMP echo (ping qui part pis qui revient)
+- DNS query/response (le nom devient IP)
+- TCP three-way handshake (SYN, SYN-ACK, ACK)
+- TLS traffic (le chiffrement)
+
+### Fichiers
+
+- `pcaps/day02-network-basics.pcapng` (mes captures)
+- `troubleshooting/day02-break-fix.md` (ce que j'ai cassé et réparé)
