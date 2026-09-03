@@ -82,3 +82,36 @@ J'ai capturé et analysé:
 
 - `pcaps/day02-network-basics.pcapng` (mes captures)
 - `troubleshooting/day02-break-fix.md` (ce que j'ai cassé et réparé)
+
+## Network Security & Segmentation
+
+J'ai configuré pfSense comme firewall entre mes 4 réseaux. Chaque réseau est isolé et a des droits différents.
+
+![Segmented Architecture](diagrams/architecture-v2-segmented.png)
+
+### Ce que j'ai fait
+
+- USERS (10.10.10.0/24) pour les postes utilisateurs
+- SERVERS (10.10.20.0/24) pour les serveurs
+- MGMT (10.10.30.0/24) pour l'administration
+- SECURITY (10.10.40.0/24) pour les outils de sécurité
+
+### Règles principales
+
+- USERS peut aller sur Internet mais pas sur SERVERS
+- USERS a juste accès a certains ports sur les serveurs (DNS et SMB)
+- MGMT peut tout administrer
+- J'ai utilisé un firewall stateful et le principe "si c'est pas autorisé c'est bloqué"
+
+### Pannes que j'ai testées
+
+- DNS cassé (mauvais serveur DNS)
+- Règle firewall désactivée
+- NAT désactivé
+- Mauvaise gateway
+
+Plus de détails dans la doc.
+
+Voir:
+- [`docs/day03-pfsense-segmentation.md`](docs/day03-pfsense-segmentation.md)
+- [`troubleshooting/day03-pfsense-break-fix.md`](troubleshooting/day03-pfsense-break-fix.md)
