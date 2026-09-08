@@ -1,0 +1,100 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0">
+  <diagram name="Page-1" id="8vlIObs7-HFFBCyp8LZa">
+    <mxGraphModel dx="784" dy="1994" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IHq2Oq5n3UBJUm2p1Diq-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="New Corporate Laptop" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="-60" as="geometry" />
+        </mxCell>
+        <mxCell id="IHq2Oq5n3UBJUm2p1Diq-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Autopilot Registration Device associated with org&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="IHq2Oq5n3UBJUm2p1Diq-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value=" OOBE&lt;div&gt;&amp;nbsp;User starts Windows setup&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="FjwCna-GGOaU6Bx3oQyF-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Microsoft Entra Join&amp;nbsp; Device receives identity&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="FjwCna-GGOaU6Bx3oQyF-4" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" target="IHq2Oq5n3UBJUm2p1Diq-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="320" as="sourcePoint" />
+            <mxPoint x="370" y="-50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FjwCna-GGOaU6Bx3oQyF-5" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" target="IHq2Oq5n3UBJUm2p1Diq-14" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="320" y="90" as="sourcePoint" />
+            <mxPoint x="370" y="40" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FjwCna-GGOaU6Bx3oQyF-6" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="FjwCna-GGOaU6Bx3oQyF-3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="320" y="200" as="sourcePoint" />
+            <mxPoint x="370" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-1" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="320" y="310" as="sourcePoint" />
+            <mxPoint x="320" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value=" Configuration Profiles Security + Windows settings" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-3" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="319.5" y="440" as="sourcePoint" />
+            <mxPoint x="319.5" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-7" edge="1" parent="1" source="qigALgxuHfjjoq699p3i-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="qigALgxuHfjjoq699p3i-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="  Application Deployment&lt;div&gt;&amp;nbsp;M365 + business applications&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&amp;nbsp;Compliance Evaluation&lt;div&gt;&amp;nbsp;Compliant / Non-compliant&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-8" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="319.5" y="570" />
+              <mxPoint x="319.5" y="570" />
+            </Array>
+            <mxPoint x="319.5" y="640" as="sourcePoint" />
+            <mxPoint x="320" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Conditional Access + M365&lt;div&gt;Identity + device security&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-10" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="319.5" y="690" />
+              <mxPoint x="319.5" y="690" />
+            </Array>
+            <mxPoint x="319.5" y="760" as="sourcePoint" />
+            <mxPoint x="320" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-11" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="319.5" y="810" />
+              <mxPoint x="319.5" y="810" />
+            </Array>
+            <mxPoint x="319.5" y="880" as="sourcePoint" />
+            <mxPoint x="320" y="870" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qigALgxuHfjjoq699p3i-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Business-Ready PC User receives the device" vertex="1">
+          <mxGeometry height="60" width="120" x="260" y="870" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
