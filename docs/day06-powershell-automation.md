@@ -1,456 +1,116 @@
-\# Day 06 — PowerShell Automation
+# Day 06 — Automatisation PowerShell
 
+## Objectif
 
+Automatiser des tâches répétitives d'administration Active Directory et de diagnostic avec PowerShell.
 
-\## Objective
+## Fichiers
 
+- [`configs/users.csv`](../configs/users.csv)
+- [`scripts/New-RKTUsers.ps1`](../scripts/New-RKTUsers.ps1)
+- [`scripts/Disable-RKTUser.ps1`](../scripts/Disable-RKTUser.ps1)
+- [`scripts/Get-RKTInventory.ps1`](../scripts/Get-RKTInventory.ps1)
+- [`scripts/Test-RKTNetwork.ps1`](../scripts/Test-RKTNetwork.ps1)
 
+## 1. Création automatisée d'utilisateurs
 
-The objective of Day 06 was to automate repetitive Active Directory and infrastructure administration tasks using PowerShell.
+`New-RKTUsers.ps1` lit le fichier `configs/users.csv`.
 
-
-
-The lab focused on PowerShell objects, properties, pipelines, variables, arrays, conditional logic, functions, CSV processing, error handling, and logging.
-
-
-
-\---
-
-
-
-\## Build 1 — Automated User Onboarding
-
-
-
-The `New-RKTUsers.ps1` script automates Active Directory user provisioning from a CSV file.
-
-
-
-The source file is:
-
-
+Colonnes utilisées :
 
 ```text
-
-configs/users.csv
-
-```
-
-
-
-The CSV contains the following fields:
-
-
-
-```text
-
 FirstName
-
 LastName
-
 Department
-
 Location
-
 Title
-
 ```
 
+Pour chaque entrée valide, le script :
 
+1. vérifie les champs obligatoires
+2. génère un nom d'utilisateur au format `prenom.nom`
+3. vérifie l'OU du département
+4. vérifie le groupe global du département
+5. crée le compte Active Directory
+6. ajoute l'utilisateur au groupe approprié
+7. demande un mot de passe temporaire de façon sécurisée
+8. force le changement du mot de passe à la prochaine ouverture de session
+9. écrit le résultat dans un journal
 
-For each valid user, the script:
+Les comptes déjà existants sont ignorés proprement au lieu d'arrêter tout le traitement.
 
+## 2. Désactivation d'un utilisateur
 
+`Disable-RKTUser.ps1` :
 
-1\. Reads the CSV record.
+- recherche le compte
+- désactive le compte Active Directory
+- retire les groupes départementaux
+- déplace le compte vers `Disabled-Accounts`
+- journalise les actions
 
-2\. Generates a username using `firstname.lastname`.
+## 3. Inventaire d'un poste
 
-3\. Verifies the department.
+`Get-RKTInventory.ps1` collecte notamment :
 
-4\. Determines the appropriate Active Directory OU.
+- nom du poste
+- système d'exploitation
+- version
+- mémoire RAM
+- adresses IPv4
+- taille et espace libre du disque `C:`
+- utilisateur connecté
+- date de collecte
 
-5\. Creates the Active Directory user.
+Le résultat est affiché dans PowerShell et exporté au format CSV.
 
-6\. Assigns the departmental Global Security Group.
+## 4. Validation réseau
 
-7\. Configures a temporary password.
+`Test-RKTNetwork.ps1` vérifie :
 
-8\. Forces a password change at the next logon.
+- passerelle
+- résolution DNS interne
+- connectivité vers `DC01`
+- connectivité vers `FS01`
+- accès Internet en TCP 443
+- DNS en TCP 53
+- SMB en TCP 445
 
-9\. Logs the result.
+Les résultats sont retournés avec un statut `PASS` ou `FAIL` et exportés en CSV.
 
+## Gestion des erreurs
 
-
-Example permission relationship:
-
-
-
-```text
-
-Nora Bensaid
-
-→ GG\_FINANCE\_USERS
-
-→ DL\_FINANCE\_RW
-
-→ \\\\FS01\\Finance
-
-```
-
-
-
-Existing users are detected and skipped instead of causing the entire script to fail.
-
-
-
-\---
-
-
-
-\## Build 2 — Automated User Offboarding
-
-
-
-The `Disable-RKTUser.ps1` script automates basic user offboarding.
-
-
-
-The script:
-
-
-
-\- Disables the Active Directory account.
-
-\- Removes departmental Global Group access.
-
-\- Moves the account to the `Disabled-Accounts` OU.
-
-\- Logs each action.
-
-
-
-The workflow was validated using a test account.
-
-
-
-\---
-
-
-
-\## Build 3 — Workstation Inventory
-
-
-
-The `Get-RKTInventory.ps1` script collects basic system information from a Windows computer.
-
-
-
-The collected information includes:
-
-
-
-```text
-
-Hostname
-
-Operating System
-
-OS Version
-
-RAM
-
-IPv4 Address
-
-C: Drive Size
-
-C: Drive Free Space
-
-Logged-on User
-
-```
-
-
-
-The result is displayed in PowerShell and exported to CSV.
-
-
-
-This provides a simple example of automated endpoint inventory collection.
-
-
-
-\---
-
-
-
-\## Build 4 — Network Validation
-
-
-
-The `Test-RKTNetwork.ps1` script performs basic network validation.
-
-
-
-The script tests:
-
-
-
-```text
-
-Default Gateway
-
-DNS Resolution
-
-Domain Controller
-
-FS01
-
-Internet Connectivity
-
-TCP Port 53
-
-TCP Port 445
-
-```
-
-
-
-The results are returned as `PASS` or `FAIL` and exported to CSV.
-
-
-
-This provides a repeatable method for checking the basic connectivity required by the enterprise lab.
-
-
-
-\---
-
-
-
-\## Error Handling
-
-
-
-The scripts use PowerShell error handling to avoid uncontrolled failures.
-
-
-
-The implementation uses:
-
-
+Les scripts utilisent notamment :
 
 ```powershell
-
 try {
-
-&#x20;   # Operation
-
+    # Opération
 }
-
 catch {
-
-&#x20;   # Log error and continue safely
-
+    # Journaliser l'erreur
 }
-
 ```
 
+Des validations sont faites avant plusieurs opérations afin d'éviter des erreurs simples, par exemple :
 
+- fichier CSV absent
+- colonne CSV manquante
+- utilisateur déjà existant
+- OU inexistante
+- groupe Active Directory inexistant
+- service réseau inaccessible
 
-This allows the automation to handle problems such as:
+## Journalisation
 
-
-
-\- Existing Active Directory users
-
-\- Invalid departments
-
-\- Missing Organizational Units
-
-\- Invalid CSV paths
-
-\- Missing Active Directory groups
-
-\- Unreachable network services
-
-
-
-\---
-
-
-
-\## Break/Fix — Invalid Department
-
-
-
-A deliberate invalid department was temporarily added to the CSV:
-
-
+Les fichiers sont enregistrés sous :
 
 ```text
-
-Department = Accounting
-
+C:\RKTLogs
 ```
 
+Aucun mot de passe n'est stocké dans le dépôt.
 
+## Ce que j'ai appris
 
-There is no `Accounting` OU in the lab.
-
-
-
-The onboarding script detected the invalid department, logged the error, and continued processing the following CSV entries instead of terminating.
-
-
-
-This validated that one bad record does not stop the entire onboarding process.
-
-
-
-The invalid test record was removed from the final CSV after validation.
-
-
-
-\---
-
-
-
-\## Logging
-
-
-
-The scripts create local operational logs under:
-
-
-
-```text
-
-C:\\RKTLogs
-
-```
-
-
-
-Examples include:
-
-
-
-```text
-
-C:\\RKTLogs\\onboarding.log
-
-C:\\RKTLogs\\offboarding.log
-
-C:\\RKTLogs\\inventory.csv
-
-C:\\RKTLogs\\network-test.csv
-
-```
-
-
-
-Passwords and credentials are not stored in the repository.
-
-
-
-\---
-
-
-
-\## Files
-
-
-
-The Day 06 portfolio contains:
-
-
-
-```text
-
-configs/users.csv
-
-
-
-scripts/New-RKTUsers.ps1
-
-scripts/Disable-RKTUser.ps1
-
-scripts/Get-RKTInventory.ps1
-
-scripts/Test-RKTNetwork.ps1
-
-
-
-docs/day06-powershell-automation.md
-
-```
-
-
-
-\---
-
-
-
-\## Validation
-
-
-
-The following tasks were validated:
-
-
-
-\- CSV-based Active Directory provisioning
-
-\- Username generation
-
-\- Department OU selection
-
-\- Department security group assignment
-
-\- Temporary password configuration
-
-\- Password change at next logon
-
-\- Existing user detection
-
-\- Invalid department error handling
-
-\- User account disabling
-
-\- Department access removal
-
-\- Moving disabled accounts
-
-\- Windows system inventory
-
-\- Gateway testing
-
-\- DNS resolution testing
-
-\- Domain Controller connectivity
-
-\- File Server connectivity
-
-\- TCP port 53 testing
-
-\- TCP port 445 testing
-
-\- Logging
-
-
-
-\---
-
-
-
-\## What I Learned
-
-
-
-Day 06 demonstrated how PowerShell can replace repetitive administrative tasks with repeatable and documented automation.
-
-
-
-I learned how to process CSV data, manipulate Active Directory objects, use objects and properties through the PowerShell pipeline, handle failures with `try/catch`, create logs, automate user lifecycle operations, collect endpoint information, and perform repeatable network validation.
-
+Cette étape m'a permis de pratiquer les objets PowerShell, les propriétés, les pipelines, les variables, les fonctions, le traitement CSV, `try/catch`, la journalisation et l'automatisation de tâches Active Directory.

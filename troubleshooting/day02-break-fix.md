@@ -1,212 +1,149 @@
-# Day 02 — Break/Fix
+# Day 02 — Dépannage réseau
 
-## INC-01 — Wrong Gateway
+## Incident 1 — Mauvaise passerelle
 
-### Symptom
-- accès réseau local OK
-- internet ne marche pas
+### Symptôme
 
-### Expected Configuration
-- IP: 10.10.10.10
-- Mask: 255.255.255.0
-- Gateway: 10.10.10.1
+- réseau local accessible
+- accès Internet impossible
 
-### Broken Configuration
-- Gateway: 10.10.10.254
+### Diagnostic
 
-### Commands Used
-- ipconfig /all
-- ping 10.10.10.1
-- ping 1.1.1.1
-- route print
+```cmd
+ipconfig /all
+ping 10.10.10.1
+ping 1.1.1.1
+route print
+```
 
-### Evidence
-- ping 10.10.10.1 OK
-- ping 1.1.1.1 FAIL
-- mauvaise gateway dans ipconfig
+### Cause
 
-### Root Cause
-- default gateway incorrecte
+La passerelle par défaut était incorrecte.
 
-### Resolution
-- remettre gateway: 10.10.10.1
+### Correction
+
+```text
+Passerelle : 10.10.10.1
+```
 
 ### Validation
-- ping 10.10.10.1 OK
-- ping 1.1.1.1 OK
 
-### What This Taught Me
-- même subnet = pas besoin de gateway
-- autre réseau = passe par la default gateway
-
+- passerelle joignable
+- accès hors du réseau local rétabli
 
 ---
 
-## INC-02 — Wrong Subnet Mask
+## Incident 2 — Mauvais masque de sous-réseau
 
-### Symptom
-- problème de communication avec la gateway
-- réseau ne fonctionne pas normalement
+### Symptôme
 
-### Expected Configuration
-- IP: 10.10.10.10
-- Mask: 255.255.255.0 /24
-- Gateway: 10.10.10.1
+La communication avec la passerelle ne fonctionnait pas normalement.
 
-### Broken Configuration
-- IP: 10.10.10.10
-- Mask: 255.255.255.252 /30
-- Gateway: 10.10.10.1
+### Diagnostic
 
-### Commands Used
-- ipconfig /all
-- ping 10.10.10.1
-- route print
+```cmd
+ipconfig /all
+ping 10.10.10.1
+route print
+```
 
-### Evidence
-- masque /30 au lieu de /24
-- 10.10.10.10 et 10.10.10.1 pas dans le même petit subnet
+### Cause
 
-### Root Cause
-- mauvais subnet mask
+Un masque `/30` plaçait le poste et la passerelle dans des sous-réseaux différents.
 
-### Resolution
-- remettre:
-- 255.255.255.0
-- /24
+### Correction
+
+```text
+Masque : 255.255.255.0 (/24)
+```
 
 ### Validation
-- ping 10.10.10.1 OK
-- réseau normal
 
-### What This Taught Me
-- le subnet mask décide quelles IP sont considérées locales
-- mauvais masque = mauvais calcul du réseau
-
+- passerelle joignable
+- routage normal
 
 ---
 
-## INC-03 — Wrong DNS
+## Incident 3 — Mauvais serveur DNS
 
-### Symptom
-- internet par IP marche
-- noms de domaine ne marchent pas
+### Symptôme
 
-### Expected Configuration
-- DNS: 1.1.1.1
-- ou 8.8.8.8
+- connectivité IP fonctionnelle
+- résolution de noms impossible
 
-### Broken Configuration
-- DNS: 10.10.10.250
+### Diagnostic
 
-### Commands Used
-- ping 1.1.1.1
-- ping google.com
-- nslookup google.com
-- ipconfig /all
+```cmd
+ping 1.1.1.1
+ping google.com
+nslookup google.com
+ipconfig /all
+```
 
-### Evidence
-- ping 1.1.1.1 OK
-- ping google.com FAIL
-- nslookup google.com FAIL
+### Cause
 
-### Root Cause
-- serveur DNS incorrect / inexistant
+Le serveur DNS configuré n'était pas valide pour cette étape du laboratoire.
 
-### Resolution
-- remettre DNS:
-- 1.1.1.1
-- 8.8.8.8
+### Correction
 
-### Validation
-- nslookup google.com OK
-- ping google.com OK
+Rétablir un serveur DNS valide.
 
-### What This Taught Me
-- connexion IP peut marcher même si DNS est cassé
-- DNS sert à résoudre nom → IP
-
+> Après le déploiement d'Active Directory, le DNS des postes du domaine devient `DC01` (`10.10.20.10`).
 
 ---
 
-## INC-04 — Duplicate IP
+## Incident 4 — Adresse IP dupliquée
 
-### Symptom
-- connexion instable ou coupée
+### Symptôme
+
+- connectivité instable
 - conflit réseau
 
-### Expected Configuration
-- W11-01: 10.10.10.10
-- pfSense: 10.10.10.1
+### Cause
 
-### Broken Configuration
-- W11-01: 10.10.10.1
-- pfSense: 10.10.10.1
+Deux appareils utilisaient `10.10.10.1`.
 
-### Commands Used
-- ipconfig /all
-- ping 10.10.10.1
-- arp -a
+### Correction
 
-### Evidence
-- 2 appareils avec la même IP
-- comportement ARP pas normal
-- perte de connectivité
-
-### Root Cause
-- adresse IP dupliquée
-
-### Resolution
-- remettre W11-01:
-- 10.10.10.10
+```text
+W11-01 : 10.10.10.10
+pfSense : 10.10.10.1
+```
 
 ### Validation
-- ping 10.10.10.1 OK
-- connexion stable
-- plus de conflit
 
-### What This Taught Me
-- chaque machine doit avoir une IP unique
-- duplicate IP peut casser ARP et la connectivité
-
+La connectivité redevient stable.
 
 ---
 
-## INC-05 — Disabled Adapter
+## Incident 5 — Carte réseau désactivée
 
-### Symptom
-- aucune connexion réseau
-- interface Ethernet désactivée
+### Symptôme
 
-### Expected Configuration
-- adapter Ethernet Enabled
+Aucune connectivité réseau sur le poste.
 
-### Broken Configuration
-- adapter Ethernet Disabled
+### Diagnostic
 
-### Commands Used
-- ncpa.cpl
-- ipconfig
-- ping 127.0.0.1
-- ping 10.10.10.1
+```cmd
+ncpa.cpl
+ipconfig
+ping 127.0.0.1
+ping 10.10.10.1
+```
 
-### Evidence
-- interface désactivée dans ncpa.cpl
-- pas d'IP normale sur l'interface
-- ping 127.0.0.1 OK
-- ping 10.10.10.1 FAIL
+### Cause
 
-### Root Cause
-- network adapter désactivé
+La carte réseau était désactivée dans Windows.
 
-### Resolution
-- clic droit Ethernet
-- Enable
+### Correction
+
+Réactiver l'interface Ethernet.
 
 ### Validation
-- ipconfig montre l'interface
-- ping 10.10.10.1 OK
 
-### What This Taught Me
-- vérifier l'état de l'adapter avant de chercher plus loin
-- loopback peut fonctionner même si la carte réseau est désactivée
+- l'interface apparaît dans `ipconfig`
+- la passerelle est de nouveau joignable
+
+## Leçon principale
+
+Toujours vérifier l'interface, l'adresse IP, le masque, la passerelle et le DNS avant de modifier le pare-feu ou les services réseau.

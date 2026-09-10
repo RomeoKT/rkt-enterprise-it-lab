@@ -1,142 +1,56 @@
-# Day 07 — Windows Endpoint Break/Fix
+# Day 07 — Dépannage Windows avec Process Monitor
 
-## Scenario
+## Scénario
 
-A Windows user was unable to create a file inside a restricted folder.
+Un utilisateur ne pouvait pas créer de fichier dans un dossier de test local. L'objectif était d'utiliser Process Monitor pour trouver l'opération refusée.
 
-The purpose of this test was to troubleshoot a Windows permission issue using Sysinternals Process Monitor.
+## Système concerné
 
-## Affected System
+| Élément | Valeur |
+|---|---|
+| Poste | `W11-01` |
+| Domaine | `corp.rktlab.test` |
+| Utilisateur | `CORP\sarah.tremblay` |
+| Dossier | `C:\RKT-Day07\Restricted` |
 
-- Workstation: W11-01
-- Domain: corp.rktlab.test
-- User: CORP\sarah.tremblay
-- Folder: C:\RKT-Day07\Restricted
-- Test file: C:\RKT-Day07\Restricted\sarah-test.txt
+## Symptôme
 
-## Symptoms
+Sarah pouvait lire le dossier, mais pas créer ou modifier un fichier.
 
-Sarah attempted to create a file inside:
+## Diagnostic avec Process Monitor
+
+Filtres appliqués :
 
 ```text
-C:\RKT-Day07\Restricted
-
-Windows returned an access denied error.
-
-The user could read the folder but could not create or modify files inside it.
-
-## Initial Permissions
-
-Sarah only had Read and Execute permissions:
-
-```
-CORP\sarah.tremblay = RX
+Result is ACCESS DENIED
+Path begins with C:\RKT-Day07\Restricted
 ```
 
-The permissions were verified with:
+Reproduction :
 
-```
-icacls "C:\RKT-Day07\Restricted"
-```
-
-## Troubleshooting
-
-Process Monitor was started and filtered with:
-
-```
-Result
-is
-ACCESS DENIED
-Include
-```
-
-A second filter was added:
-
-```
-Path
-begins with
-C:\RKT-Day07\Restricted
-Include
-```
-
-The problem was reproduced with:
-
-```
+```powershell
 New-Item -ItemType File -Path "C:\RKT-Day07\Restricted\sarah-test.txt"
 ```
 
-Process Monitor showed:
+Process Monitor a montré une opération `ACCESS DENIED`.
 
-```
-Result: ACCESS DENIED
-Path: C:\RKT-Day07\Restricted\sarah-test.txt
-```
+## Cause
 
-## Root Cause
+Le compte possédait uniquement les permissions `Read and Execute`. La permission `Modify` manquait.
 
-Sarah only had Read and Execute NTFS permissions.
+## Correction
 
-She did not have Modify permission, so Windows blocked the file creation operation.
-
-## Resolution
-
-Modify permission was granted to Sarah:
-
-```
+```cmd
 icacls "C:\RKT-Day07\Restricted" /grant:r "CORP\sarah.tremblay:(OI)(CI)(M)"
 ```
 
-The permissions were verified again:
-
-```
-icacls "C:\RKT-Day07\Restricted"
-```
-
-Sarah now had:
-
-```
-M
-```
-
-`M` means Modify.
+> Cette permission directe sert uniquement au scénario local de dépannage. Les partages du Day 05 utilisent des groupes AGDLP.
 
 ## Validation
 
-The file creation test was repeated:
-
-```
+```powershell
 New-Item -ItemType File -Path "C:\RKT-Day07\Restricted\sarah-test.txt" -Force
-```
-
-The file was successfully created.
-
-Verification:
-
-```
 Get-Item "C:\RKT-Day07\Restricted\sarah-test.txt"
 ```
 
-The issue was resolved.
-
-## What I Learned
-
-The troubleshooting process was:
-
-```
-Symptom
-↓
-Reproduce the problem
-↓
-Capture evidence with Process Monitor
-↓
-Identify ACCESS DENIED
-↓
-Check NTFS permissions
-↓
-Identify root cause
-↓
-Correct permissions
-↓
-Validate the fix
-```
-
+Le fichier est créé correctement après la correction.

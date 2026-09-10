@@ -1,92 +1,125 @@
-# Day 05 — Active Directory, GPO and File Services
+# Day 05 — Active Directory, GPO et services de fichiers
 
-## Objective
-Extend the RKT Enterprise IT Lab with a dedicated file server, structured Active Directory groups, AGDLP permissions, Group Policy and Windows LAPS.
+## Objectif
+
+Ajouter un serveur de fichiers, organiser les permissions avec AGDLP, appliquer des GPO et utiliser Windows LAPS.
 
 ## FS01
-- Hostname: FS01
-- IP Address: 10.10.20.20
-- Default Gateway: 10.10.20.1
-- DNS Server: 10.10.20.10
-- Domain: corp.rktlab.test
 
-## Employees
-15 employees were created across five departments:
+| Paramètre | Valeur |
+|---|---|
+| Nom | `FS01` |
+| Adresse IP | `10.10.20.20` |
+| Passerelle | `10.10.20.1` |
+| DNS | `10.10.20.10` |
+| Domaine | `corp.rktlab.test` |
+
+## Comptes et départements
+
+Des comptes de test sont répartis dans les départements suivants :
+
 - Finance
 - HR
 - IT
 - Sales
 - Operations
 
-## AGDLP Permission Model
-The permission structure follows:
+Les noms d'objets Active Directory restent en anglais afin de correspondre à la configuration réelle du laboratoire.
+
+## Modèle de permissions AGDLP
+
+Le modèle utilisé est :
+
+```text
 Account → Global Group → Domain Local Group → Permission
+```
 
-Example:
-Sarah Tremblay → GG_FINANCE_USERS → DL_FINANCE_RW → \\FS01\Finance
+Exemple :
 
-![AGDLP Permission Model](../diagrams/ad-permission-model.png)
+```text
+Sarah Tremblay
+→ GG_FINANCE_USERS
+→ DL_FINANCE_RW
+→ \\FS01\Finance
+```
 
-## File Server
-FS01 provides the following SMB shares:
-- \\FS01\Finance
-- \\FS01\HR
-- \\FS01\IT
-- \\FS01\Public
+![Modèle de permissions AGDLP](../diagrams/ad-permission-model.png)
 
-## Share vs NTFS Permissions
-Share permissions control access to resources over SMB.
-NTFS permissions control access to files and folders on the Windows file system.
-AGDLP groups were used instead of assigning folder permissions directly to individual users.
+Les permissions sont attribuées aux groupes plutôt qu'aux utilisateurs directement.
+
+## Services de fichiers
+
+`FS01` héberge notamment les partages SMB suivants :
+
+```text
+\\FS01\Finance
+\\FS01\HR
+\\FS01\IT
+\\FS01\Public
+```
+
+### Permissions de partage et NTFS
+
+- les permissions de partage contrôlent l'accès au partage SMB
+- les permissions NTFS contrôlent l'accès aux dossiers et fichiers
+- les groupes AGDLP simplifient l'administration des accès
 
 ## Group Policy
-The following GPOs were created:
-- GPO-Workstations-Security
-- GPO-Map-Drives
-- GPO-Screen-Lock
-- GPO-Account-Lockout
-- GPO-Windows-Firewall
 
-Group Policy was validated using:
+Les GPO suivantes ont été créées dans le laboratoire :
+
+- `GPO-Workstations-Security`
+- `GPO-Map-Drives`
+- `GPO-Screen-Lock`
+- `GPO-Account-Lockout`
+- `GPO-Windows-Firewall`
+
+Validation :
+
+```cmd
 gpupdate /force
 gpresult /r
 gpresult /h C:\gpresult.html
+```
 
+## Mappage de lecteurs
 
-## Drive Mapping
-Finance users receive:
+Les utilisateurs Finance reçoivent :
+
+```text
 F: → \\FS01\Finance
+```
 
-Public resources are available through:
-\\FS01\Public
-
-Drive mapping was managed using Group Policy Preferences and security-group targeting.
+Le mappage est géré avec Group Policy Preferences et un ciblage par groupe de sécurité.
 
 ## Windows LAPS
-Windows LAPS was configured for W11-01.
-The purpose of LAPS is to avoid using the same local administrator password across multiple workstations.
-Each managed workstation can use a unique rotating local administrator password that is securely stored in Active Directory and retrieved only by authorized administrators.
-No LAPS password is stored in this repository.
 
-## Break/Fix
-Four troubleshooting scenarios were performed:
-1. Workstation placed in the wrong OU.
-2. User removed from the correct security group.
-3. Incorrect NTFS permissions.
-4. Missing mapped drive caused by incorrect GPO targeting.
+Windows LAPS a été configuré pour `W11-01`.
 
-See: troubleshooting/day05-ad-break-fix.md
+L'objectif est d'éviter de réutiliser le même mot de passe administrateur local sur plusieurs postes. Le mot de passe LAPS n'est jamais stocké dans ce dépôt.
+
+## Dépannage
+
+Quatre scénarios ont été reproduits :
+
+1. poste placé dans la mauvaise OU
+2. utilisateur retiré de son groupe de sécurité
+3. permissions NTFS incorrectes
+4. lecteur réseau absent à cause d'un mauvais ciblage GPO
+
+Voir [Day 05 — Dépannage Active Directory](../troubleshooting/day05-ad-break-fix.md).
 
 ## Validation
-- FS01 successfully joined corp.rktlab.test
-- SMB shares validated
-- AGDLP permissions validated
-- Department access isolation validated
-- Group Policy processing validated
-- Drive mapping validated
-- Windows LAPS validated
-- Four troubleshooting scenarios completed
 
-## What I Learned
-I learned how Active Directory organizational units and security groups serve different purposes, how AGDLP simplifies access management, how Share and NTFS permissions interact, how Group Policy centrally manages users and workstations, and how Windows LAPS improves local administrator credential security.
+- `FS01` joint au domaine
+- partages SMB accessibles selon les permissions prévues
+- modèle AGDLP validé
+- isolation des accès entre départements vérifiée
+- traitement des GPO validé
+- mappage de lecteur validé
+- Windows LAPS validé
+- scénarios de dépannage réalisés
 
+## Ce que j'ai appris
+
+Cette étape m'a permis de mieux comprendre la différence entre OU et groupes, le modèle AGDLP, les permissions de partage et NTFS, le ciblage des GPO et l'intérêt de Windows LAPS.

@@ -1,32 +1,55 @@
-# KB-002 — Pas d'Internet
+# KB-002 — Diagnostiquer un problème d'accès Internet
 
 ## Symptôme
-L'utilisateur ne peut pas accéder à Internet.
 
-## Causes
-1. Mauvaise IP ou gateway
-2. Mauvais DNS
-3. Câble débranché
+Le poste ne peut pas accéder à Internet.
 
-## Solution — Étapes
+## Vérifications
 
-1. Vérifier `ipconfig /all`
-   - IP valide
-   - Gateway = 10.10.10.1
-   - DNS = 10.10.20.10
+### 1. Configuration IP
 
-2. Tester la connectivité
-   - `ping 127.0.0.1` → OK
-   - `ping 10.10.10.1` → OK
-   - `ping 1.1.1.1` → OK
+```cmd
+ipconfig /all
+```
 
-3. Tester DNS
-   - `nslookup google.com` → OK
+Pour `W11-01`, vérifier notamment :
+
+```text
+Réseau : 10.10.10.0/24
+Passerelle : 10.10.10.1
+DNS du domaine : 10.10.20.10
+```
+
+### 2. Passerelle
+
+```cmd
+ping 10.10.10.1
+```
+
+### 3. DNS
+
+```powershell
+Test-NetConnection 10.10.20.10 -Port 53
+Resolve-DnsName DC01.corp.rktlab.test -Server 10.10.20.10
+```
+
+### 4. Accès Internet
+
+```powershell
+Test-NetConnection 1.1.1.1 -Port 443
+```
+
+### 5. Navigateur
+
+Tester ensuite l'ouverture d'un site Web.
 
 ## Validation
-- `ping 1.1.1.1` OK
-- `nslookup google.com` OK
-- Le navigateur affiche une page
+
+- passerelle accessible
+- DNS interne fonctionnel
+- sortie TCP 443 fonctionnelle
+- navigation Web fonctionnelle
 
 ## Catégorie
+
 Réseau / DNS
