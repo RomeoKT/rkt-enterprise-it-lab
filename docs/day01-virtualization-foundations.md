@@ -1,55 +1,51 @@
-## Hypervisor
+# Day 01 — Fondements de la virtualisation
 
-Logiciel qui fait tourner des VMs. VMware Workstation Pro c'est un hyperviseur de type 2, ca roule par dessus Windows. Gratuit maintenant.
+## Objectif
 
-## Virtual Machine
+Préparer l'environnement VMware Workstation Pro et créer les machines virtuelles nécessaires au laboratoire.
 
-Un ordi dans un ordi. Elle a son propre OS, sa propre IP. L'hyperviseur lui fait croire qu'elle est sur du vrai hardware.
+## Concepts utilisés
 
-## vCPU
+- **Hyperviseur de type 2** : VMware Workstation Pro fonctionne au-dessus du système d'exploitation de l'hôte.
+- **Machine virtuelle** : système isolé avec son propre système d'exploitation, ses ressources et ses interfaces réseau.
+- **vCPU** : processeurs virtuels attribués à une VM.
+- **Mémoire virtuelle** : mémoire RAM attribuée à une VM.
+- **Disque virtuel** : fichier représentant le stockage de la VM.
+- **Snapshot** : point de restauration utilisé avant une modification importante.
+- **Clone** : copie d'une VM permettant de réutiliser une base existante.
+- **NAT** : permet à une VM de sortir vers Internet en utilisant la connexion de l'hôte.
+- **Host-only** : réseau virtuel isolé utilisé pour les zones internes du laboratoire.
+- **Carte réseau virtuelle** : interface réseau d'une VM.
+- **Commutateur virtuel** : relie les VMs présentes sur un même réseau virtuel.
 
-Le CPU de ta VM. J'met 2 coeurs pour mes VMs. Pas plus sinon l'hôte lag.
+## Environnement créé
 
-## Virtual Memory
+Six machines virtuelles ont été préparées :
 
-La RAM de ta VM. J'ai 32 Go physique, j'donne 2-4 Go par VM. Faut pas dépasser sinon ca swap.
+- `PFSENSE01`
+- `DC01`
+- `FS01`
+- `W11-01`
+- `ADMIN01`
+- `UBUNTU01`
 
-## Virtual Disk
+Quatre réseaux VMware host-only ont été créés :
 
-Un fichier (.vmdk) qui est comme le disque dur de la VM. Ca prend dla place sur ton SSD.
+| Zone | Réseau |
+|---|---|
+| USERS | `10.10.10.0/24` |
+| SERVERS | `10.10.20.0/24` |
+| MGMT | `10.10.30.0/24` |
+| SECURITY | `10.10.40.0/24` |
 
-## Snapshot
+Les ressources CPU et mémoire sont ajustées selon le rôle de chaque VM afin de ne pas surcharger l'hôte.
 
-Un "undo" pour ta VM. Tu prend une photo avant de faire qqch, si tu pètes tout tu reviens en arriere. Ca prend dla place.
+## Résultat
 
-## Clone
+L'environnement de virtualisation de base est prêt pour l'installation des systèmes, la configuration de pfSense et le déploiement des services Windows.
 
-Copie d'une VM. Pour faire plusieurs VMs sans réinstaller.
+![Première version de l'architecture](../diagrams/architecture-v1.png)
 
-## NAT
+## Ce que j'ai appris
 
-La VM partage l'IP de ton PC pour sortir sur Internet. Les autres peuvent pas rentrer de l'exterieur.
-
-## Bridged Networking
-
-La VM est sur le meme réseau que ton PC. Pas besoin pour mon lab.
-
-## Host-Only Networking
-
-Réseau isolé, juste les VMs et l'hôte. Parfait pour mon lab.
-
-## Virtual NIC
-
-Carte réseau virtuelle. Une VM peut en avoir plusieurs.
-
-## Virtual Switch
-
-Switch en logiciel. Permet aux VMs sur un même réseau de se parler.
-
-## What I Built Today
-
-Installé VMware Workstation Pro. Downloadé les ISO. Créé mes VMs de base : PFSENSE01, DC01, FS01, W11-01, ADMIN01, UBUNTU01. Configuré 4 réseaux host-only. Commencé diagramme.
-
-## What I Still Need To Configure
-
-Installer les OS. Configurer pfSense. L'adressage IP. Tester que les VMs se ping entre les réseaux.
+Cette étape m'a permis de mieux comprendre la différence entre une VM, un réseau virtuel, le mode NAT et le mode host-only, ainsi que l'importance de bien répartir les ressources de l'hôte.

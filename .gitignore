@@ -1,47 +1,42 @@
-# VM files
+# VMware / machines virtuelles
 *.vmdk
 *.vmem
 *.vmss
 *.vmsn
 *.nvram
-*.vmx.lck
+*.vmx
+*.vmxf
 *.lck
 
-#  system images
+# Images et exports de machines virtuelles
 *.iso
 *.img
 *.ova
 *.ovf
 
-# temp 
+# Journaux et fichiers temporaires
 *.log
 *.tmp
+*.bkp
+~$*
 
-# secrets
+# Secrets et identifiants
 .env
 *.key
 *.pem
 secrets/
 credentials/
 
-# wireshark 
+# Captures réseau
+*.pcap
 *.pcapng
-*.pcap* . p c a p 
- 
- * . p c a p n g 
- 
- * . z i p 
- 
- "*.zip" 
-* . z i p 
- 
- # Large packet capture archives
-pcaps/*.zip
+pcaps/
 
-# Temporary files
-*.tmp
-*.log
+# Archives
+*.zip
+*.7z
 
-# OS/editor files
+# Fichiers système
 .DS_Store
 Thumbs.db
+desktop.ini

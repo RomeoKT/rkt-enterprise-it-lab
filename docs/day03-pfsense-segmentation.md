@@ -1,63 +1,75 @@
-# Day 03 — pfSense Break/Fix
+# Day 03 — Segmentation réseau avec pfSense
 
-## INC-01 — DNS Failure
+## Objectif
 
-### Symptom
-- ping IP works
-- domain names fail
+Utiliser pfSense comme pare-feu et routeur entre les différentes zones du laboratoire.
 
-### Root Cause
-- wrong DNS server
+## Architecture
 
-### Fix
-- DNS restored to 10.10.10.1
+![Architecture réseau segmentée](../diagrams/architecture-v2-segmented.png)
 
-### Validation
-- nslookup google.com OK
+## Réseaux
 
-## INC-02 — Firewall Rule Disabled
+| Zone | Réseau | Passerelle |
+|---|---|---|
+| USERS | `10.10.10.0/24` | `10.10.10.1` |
+| SERVERS | `10.10.20.0/24` | `10.10.20.1` |
+| MGMT | `10.10.30.0/24` | `10.10.30.1` |
+| SECURITY | `10.10.40.0/24` | `10.10.40.1` |
 
-### Symptom
-- USERS cannot access Internet
+Ces zones sont réalisées avec des réseaux VMware host-only. Elles servent à reproduire une segmentation logique dans le laboratoire.
 
-### Evidence
-- firewall logs show blocked traffic
+## Services pfSense
 
-### Root Cause
-- Internet pass rule disabled
+- DHCP sur le réseau USERS pendant les premiers tests
+- DNS Resolver pendant les tests précédant Active Directory
+- NAT sortant automatique
+- routage entre les réseaux internes
+- règles de pare-feu entre les zones
 
-### Fix
-- enabled ALLOW USERS TO INTERNET
+> À partir du déploiement d'Active Directory, `DC01` (`10.10.20.10`) devient le DNS principal des postes membres du domaine.
 
-### Validation
-- Internet access OK
+## Politique de filtrage
 
-## INC-03 — Outbound NAT Disabled
+Principes appliqués :
 
-### Symptom
-- local gateway reachable
-- Internet unavailable
+- `USERS → Internet` : autorisé
+- `USERS → SERVERS` : accès limité aux services nécessaires à Active Directory, DNS et SMB
+- `USERS → MGMT` : bloqué
+- `MGMT → réseaux internes` : accès d'administration autorisé selon le besoin
+- trafic non autorisé : bloqué
 
-### Root Cause
-- private source IP not translated to WAN
+Cette approche applique le principe du moindre privilège sans empêcher les services nécessaires au fonctionnement du domaine.
 
-### Fix
-- restored Automatic Outbound NAT
+## Validation
 
-### Validation
-- Internet access OK
+Les règles et journaux pfSense ont été vérifiés directement dans l'interface Web.
 
-## INC-04 — Wrong Gateway
+![Règles pfSense](../screenshots/day03-firewall-rules.png)
 
-### Symptom
-- local network works
-- remote network fails
+![Journaux du pare-feu](../screenshots/day03-firewall-log.png)
 
-### Root Cause
-- wrong default gateway
+![DNS Resolver](../screenshots/day03-dns-resolver.png)
 
-### Fix
-- restored 10.10.10.1
+Les validations réseau ont aussi utilisé des tests comme :
 
-### Validation
-- external connectivity OK
+```powershell
+ping 10.10.10.1
+Test-NetConnection 10.10.20.10 -Port 53
+Test-NetConnection 10.10.20.20 -Port 445
+```
+
+## Dépannage
+
+Les problèmes suivants ont été volontairement reproduits :
+
+- mauvais serveur DNS
+- règle de pare-feu désactivée
+- NAT sortant désactivé
+- mauvaise passerelle
+
+Voir [Day 03 — Dépannage pfSense](../troubleshooting/day03-pfsense-break-fix.md).
+
+## Ce que j'ai appris
+
+Cette étape m'a permis de comprendre le lien entre routage, règles de pare-feu, NAT et journaux réseau. Une route valide ne signifie pas automatiquement qu'un trafic est autorisé.

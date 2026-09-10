@@ -1,106 +1,104 @@
-# Day 05 — Active Directory Break/Fix
+# Day 05 — Dépannage Active Directory
 
-## Incident 1 — GPO Not Applied
+## Incident 1 — GPO non appliquée
 
-### Symptom
+### Symptôme
 
-The expected workstation GPO was not applied to W11-01.
+La GPO attendue n'était pas appliquée à `W11-01`.
 
-### Root Cause
+### Cause
 
-W11-01 was placed outside the `Laval\Computers` OU where the workstation GPOs were linked.
+`W11-01` avait été placé en dehors de l'OU `Laval\Computers`, où les GPO du poste étaient liées.
 
-### Resolution
+### Correction
 
-W11-01 was moved back to the `Laval\Computers` OU.
+Remettre `W11-01` dans l'OU appropriée.
 
 ### Validation
-
-The Group Policy configuration was refreshed and verified:
 
 ```cmd
 gpupdate /force
 gpresult /scope computer /r
+```
 
-The expected computer GPOs were applied again.
+---
 
-Incident 2 — Missing Group Membership
-Symptom
+## Incident 2 — Groupe de sécurité manquant
 
-Sarah Tremblay could not access the Finance resources as expected.
+### Symptôme
 
-Root Cause
+Sarah Tremblay ne pouvait pas accéder aux ressources Finance.
 
-Sarah was not a member of the GG_FINANCE_USERS security group.
+### Cause
 
-Resolution
+Le compte n'était plus membre de `GG_FINANCE_USERS`.
 
-Sarah was added back to the correct global security group:
+### Correction
 
+```powershell
 Add-ADGroupMember -Identity "GG_FINANCE_USERS" -Members "sarah.tremblay"
-Validation
+```
 
-Group membership was verified with:
+### Validation
 
+```powershell
 Get-ADGroupMember "GG_FINANCE_USERS"
+```
 
-After signing out and signing back in, Sarah successfully accessed:
+Après une nouvelle ouverture de session, l'accès à `\\FS01\Finance` fonctionne.
 
-\\FS01\Finance
-Incident 3 — Incorrect NTFS Permission
-Symptom
+---
 
-A Finance user could access the Finance share but could not correctly modify files.
+## Incident 3 — Permissions NTFS incorrectes
 
-Root Cause
+### Symptôme
 
-The DL_FINANCE_RW group did not have the required NTFS permissions on the Finance folder.
+Un utilisateur Finance pouvait ouvrir le partage, mais ne pouvait pas modifier les fichiers comme prévu.
 
-Resolution
+### Cause
 
-Modify permissions were restored:
+`DL_FINANCE_RW` ne possédait plus les permissions NTFS nécessaires.
 
+### Correction
+
+```cmd
 icacls "C:\Shares\Finance" /grant "CORP\DL_FINANCE_RW:(OI)(CI)(M)" /T
-Validation
+```
 
-Permissions were verified with:
+### Validation
 
+```cmd
 icacls "C:\Shares\Finance"
+```
 
-A Finance user successfully created, modified, and deleted a test file in the Finance share.
+---
 
-Incident 4 — Missing Drive Mapping
-Symptom
+## Incident 4 — Lecteur réseau absent
 
-The Finance F: drive did not appear for Sarah Tremblay.
+### Symptôme
 
-Root Cause
+Le lecteur `F:` n'apparaissait pas pour Sarah Tremblay.
 
-The item-level targeting configuration in GPO-Map-Drives did not correctly target the GG_FINANCE_USERS security group.
+### Cause
 
-Resolution
+Le ciblage de `GPO-Map-Drives` ne visait pas correctement `GG_FINANCE_USERS`.
 
-The Finance drive mapping was configured with:
+### Correction
 
-Location: \\FS01\Finance
-Drive Letter: F:
-Security Group: CORP\GG_FINANCE_USERS
-Validation
+```text
+Chemin : \\FS01\Finance
+Lecteur : F:
+Groupe : CORP\GG_FINANCE_USERS
+```
 
-Group Policy was refreshed:
+### Validation
 
+```cmd
 gpupdate /force
 gpresult /r
-
-The mapped drives were verified with:
-
 net use
+```
 
-The Finance drive was successfully mapped:
+## Leçon principale
 
-F: -> \\FS01\Finance
-Conclusion
-
-These troubleshooting scenarios demonstrated how Active Directory OU placement, security group membership, NTFS permissions, and Group Policy Preferences can affect user and workstation access.
-
-Each issue was intentionally reproduced, diagnosed, corrected, and validated.
+Un problème d'accès Active Directory peut venir de plusieurs niveaux : emplacement dans l'OU, appartenance à un groupe, permissions NTFS ou ciblage d'une GPO.

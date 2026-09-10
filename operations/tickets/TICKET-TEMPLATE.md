@@ -1,74 +1,52 @@
-\# TICKET-XXX — Titre du problème
+# TICKET-XXX — Titre du problème
 
+## Informations générales
 
+- **ID du ticket :** TICKET-XXX
+- **Date :** AAAA-MM-JJ
+- **Rapporté par :** Nom de l'utilisateur
+- **Catégorie :** Réseau / Active Directory / Poste client / Application / Périphérique / Sécurité
+- **Statut :** Ouvert / En cours / Résolu / Fermé
 
-\## Informations Générales
+## Impact et priorité
 
-\- \*\*Ticket ID\*\* : TICKET-XXX
+- **Impact :** Élevé / Moyen / Faible
+- **Urgence :** Élevée / Moyenne / Faible
+- **Priorité :** P1 / P2 / P3 / P4
+- **Utilisateurs touchés :** X
+- **SLA :** délai applicable
 
-\- \*\*Date\*\* : YYYY-MM-DD
+## Symptômes
 
-\- \*\*Rapporté par\*\* : Nom de l’utilisateur
+Décrire clairement ce que l'utilisateur observe.
 
-\- \*\*Catégorie\*\* : \[Réseau / AD / Endpoint / Application / Périphérique / Sécurité]
+## Preuves
 
+- messages d'erreur
+- captures d'écran
+- journaux
+- commandes et résultats utiles
 
+## Diagnostic
 
-\## Impact et Priorité
+Décrire les vérifications effectuées dans l'ordre.
 
-\- \*\*Impact\*\* : \[Élevé / Moyen / Faible]
+## Cause racine
 
-\- \*\*Urgence\*\* : \[Élevée / Moyenne / Faible]
+Indiquer la cause technique confirmée.
 
-\- \*\*Priorité\*\* : \[P1 / P2 / P3 / P4]
+## Résolution
 
-\- \*\*Nombre d’utilisateurs touchés\*\* : X
+Décrire la correction appliquée.
 
-\- \*\*SLA\*\* : \[Délai de résolution]
+## Validation
 
+Expliquer comment le fonctionnement normal a été confirmé après la correction.
 
+## Escalade
 
-\## Symptômes
+Indiquer si le ticket a été escaladé et pourquoi. Sinon : `Non requise`.
 
-Description du problème tel que rapporté par l’utilisateur.
+## Notes de fermeture
 
-
-
-\## Évidence
-
-\- Screenshots
-
-\- Logs
-
-\- Commandes exécutées
-
-
-
-\## Diagnostic
-
-Ce que j’ai fait pour comprendre le problème.
-
-
-
-\## Résolution
-
-Comment j’ai réparé.
-
-
-
-\## Validation
-
-Comment j’ai vérifié que c’était réparé.
-
-
-
-\## Root Cause
-
-Pourquoi c’est arrivé.
-
-
-
-\## Leçons Apprises
-
-Ce que j’ai appris de ce ticket.
-
+Résumer la cause, la correction et le résultat final.

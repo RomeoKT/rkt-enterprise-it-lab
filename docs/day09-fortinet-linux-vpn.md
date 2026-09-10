@@ -1,111 +1,75 @@
-# Day 09 — Fortinet, Linux Survival and VPN
+# Day 09 — Fortinet, bases Linux et VPN
 
-## Objective
+## Statut
 
-Study FortiGate firewall concepts, map them to pfSense, practice essential Linux commands on Ubuntu, and learn VPN fundamentals. No production FortiGate was administered.
+- **FortiGate :** étude et comparaison avec pfSense
+- **Linux :** commandes pratiquées sur Ubuntu
+- **VPN IPsec :** concepts et méthode de dépannage documentés
 
----
+Aucun FortiGate de production n'a été administré dans ce laboratoire.
 
-## FortiGate Fundamentals
+## Objectif
 
-FortiGate is Fortinet's firewall platform. It sits at the same position as PFSENSE01 in the lab.
+Comprendre les concepts principaux de FortiGate, pratiquer les commandes Linux utiles au dépannage et étudier le fonctionnement d'un VPN IPsec.
 
-### Key Concepts
-- Interfaces (WAN, LAN)
-- Routing table and default route (0.0.0.0/0)
-- Firewall Policies (source, destination, service, action)
-- Stateful firewall and state table
-- NAT (address translation)
-- Logging and Monitoring
+## FortiGate
 
-### FortiGate vs pfSense
+### Concepts étudiés
+
+- interfaces WAN et LAN
+- table de routage
+- route par défaut
+- politiques de pare-feu
+- services et ports
+- NAT
+- sessions
+- journaux
+
+### Comparaison FortiGate et pfSense
 
 | FortiGate | pfSense |
 |---|---|
 | Interface | Interface |
 | Firewall Policy | Firewall Rule |
-| Service | Protocol / Port |
+| Service | Protocole / port |
 | Action | Pass / Block |
 | NAT | NAT |
 | Session | State |
 | Logging | Firewall Logs |
 
-Routing answers: where does the packet go?
-Firewall policy answers: is the packet allowed?
+## Bases Linux
 
-A valid route does not mean traffic is allowed.
+```bash
+ip a
+ip r
+ping -c 4 <IP>
+ss -tulpn
+dig example.com
+curl -I https://example.com
+systemctl status <service>
+journalctl -p err -b
+ps aux
+df -h
+free -h
+```
 
----
+## VPN
 
-## Linux Survival
+- **Remote Access VPN** : appareil individuel vers réseau d'entreprise
+- **Site-to-Site VPN** : réseau vers réseau
 
-Basic commands practiced on Ubuntu to inspect and troubleshoot without advanced knowledge.
+![Flux VPN](../diagrams/vpn-flow.png)
 
-### Network
-- `ip a` — show interfaces and IPs
-- `ip r` — show routing table
-- `ping -c 4 <IP>` — test connectivity
-- `ss -tulpn` — show listening ports
-- `dig example.com` — DNS resolution
-- `curl -I https://example.com` — HTTP/HTTPS test
+### Protocoles et ports importants
 
-### Services and Logs
-- `systemctl status <service>` — service state
-- `systemctl restart <service>` — restart service
-- `systemctl --failed` — list failed services
-- `journalctl -p err -b` — errors since boot
+- UDP `500` : IKE
+- UDP `4500` : NAT Traversal
+- protocole IP `50` : ESP, ce n'est pas le port TCP 50
 
-### Processes and Resources
-- `ps aux` — list processes
-- `top` — real-time processes
-- `df -h` — disk usage
-- `free -h` — memory usage
+## Dépannage VPN
 
-### Files and Permissions
-- `ls -la` — list files with permissions
-- `cat <file>` — read a file
-- `tail -f <file>` — follow a log
-- `grep "ERROR" file` — search text
-- `chmod 644 file` — change permissions (r=4, w=2, x=1)
-- `chown user:group file` — change owner
+Voir [Day 09 — Dépannage VPN](../troubleshooting/day09-vpn-troubleshooting.md).
 
-### Troubleshooting Workflow
-ip a → ip r → ping → dig → ss -tulpn → curl → systemctl → journalctl → ps aux → df -h → free -h
+## Ce que j'ai appris
 
----
-
-## VPN Fundamentals
-
-VPN = Virtual Private Network. Creates a protected tunnel through an untrusted network.
-
-### Two Types
-- **Remote Access VPN** : individual device ↔ corporate network
-- **Site-to-Site VPN** : network ↔ network
-
-### IPsec and IKE
-- **IPsec** provides confidentiality, integrity, authentication
-- **IKE** negotiates parameters and authenticates peers before IPsec
-
-Flow:
-Peers contact → IKE negotiation → authentication → parameters agreed → IPsec established → encrypted traffic
-
-text
-
-### Important Ports
-- UDP 500 → IKE
-- UDP 4500 → NAT Traversal
-- IP Protocol 50 → ESP (not TCP port 50)
-
-### Split vs Full Tunnel
-- **Split Tunnel** : corporate traffic via VPN, Internet direct
-- **Full Tunnel** : all traffic via VPN
-
----
-
-## Concepts Learned
-
-- FortiGate architecture and pfSense mapping
-- Linux networking, services, logs, resources, permissions
-- Remote Access VPN and Site-to-Site VPN
-- IPsec, IKE, encryption, authentication
-- Split tunnel vs full tunnel
+Cette étape m'a permis de relier plusieurs concepts déjà pratiqués avec pfSense aux termes utilisés sur FortiGate, de renforcer mes bases Linux et de comprendre l'ordre général d'un diagnostic VPN.

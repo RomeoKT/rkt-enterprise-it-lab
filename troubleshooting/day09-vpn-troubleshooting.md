@@ -1,183 +1,106 @@
-# Day 09 — VPN Troubleshooting
+# Day 09 — Méthode de dépannage VPN IPsec
 
-## Objective
+## Statut
 
-Structured troubleshooting methodology for an IPsec Site-to-Site VPN that is down or not passing traffic. Documented scenario only.
+Scénario documenté pour pratiquer une méthode de diagnostic. Aucun tunnel de production n'est présenté comme ayant été administré.
 
----
+## Scénario
 
-## Scenario
+Deux réseaux doivent communiquer par un VPN Site-to-Site.
 
-Two networks should communicate through an IPsec Site-to-Site VPN.
-SITE A 10.10.0.0/16
-|
-Firewall A
-|
-Internet
-|
-Firewall B
-|
-SITE B 10.20.0.0/16
+## Ordre de diagnostic
 
+### 1. Réseau local
 
-Users at Site A cannot reach Site B resources.
+Vérifier l'adresse IP, le masque, la passerelle et l'accès au pare-feu local.
 
----
+### 2. Connectivité WAN
 
-## Troubleshooting Steps
+Vérifier que les deux pare-feu ont une connectivité Internet et une route valide vers le pair distant.
 
-### Step 1 — Local Connectivity
-Verify client has valid IP, subnet mask, gateway. Can the client reach its local firewall? If no, VPN is not the issue yet.
+### 3. Adresse du pair VPN
 
-### Step 2 — Internet Connectivity
-Both firewalls must reach each other over the Internet. Test with ping from each WAN.
+Chaque pare-feu doit utiliser l'adresse WAN correcte du pair distant.
 
-### Step 3 — VPN Peer Addresses
-Check that Firewall A points to Firewall B's WAN IP, and vice versa. Wrong peer IP breaks IKE.
+### 4. IKE
 
-### Step 4 — IKE (UDP 500 / UDP 4500)
-Verify:
-- peer addresses
-- authentication method
-- pre-shared key or certificates
-- IKE version
-- encryption and integrity settings
+Vérifier des deux côtés :
 
-Both sides must match.
+- version IKE
+- méthode d'authentification
+- clé prépartagée ou certificats
+- chiffrement
+- intégrité
 
-### Step 5 — Authentication
-If using Pre-Shared Key, both peers need the same key. A mismatch blocks the tunnel. Never commit real secrets to Git.
+Ports utilisés couramment :
 
-### Step 6 — IPsec Parameters
-Check local network, remote network, encryption, integrity, traffic selectors on both sides.
+```text
+UDP 500
+UDP 4500
+```
 
-Example:
-- Site A local: 10.10.0.0/16 → Site A remote: 10.20.0.0/16
-- Site B local: 10.20.0.0/16 → Site B remote: 10.10.0.0/16
+### 5. Paramètres IPsec
 
-### Step 7 — VPN Status
-Check status: DOWN / CONNECTING / ESTABLISHED.
+Vérifier les réseaux locaux/distants, le chiffrement, l'intégrité et les traffic selectors.
 
-If UP but traffic fails, continue to routing and firewall.
+### 6. État du tunnel
 
-### Step 8 — Routing
-Site A must know how to reach 10.20.0.0/16. Site B must know 10.10.0.0/16.
+Un tunnel `UP` ne garantit pas que le trafic fonctionne.
 
-A tunnel UP does not mean routing is correct.
+### 7. Routage
 
-### Step 9 — Firewall Policies
-Verify rules allow traffic between 10.10.0.0/16 and 10.20.0.0/16 on both sides.
+Chaque site doit savoir joindre le réseau distant.
 
-A VPN can be UP while a firewall policy blocks traffic.
+### 8. Règles de pare-feu
 
-### Step 10 — NAT
-Internal VPN traffic should not be translated as normal Internet traffic. Wrong NAT can break return routing.
+Les règles doivent autoriser le trafic nécessaire entre les deux réseaux.
 
-### Step 11 — Logs
-Check firewall and VPN logs for:
-- IKE failure
-- authentication failure
-- proposal mismatch
-- peer unreachable
-- traffic selector mismatch
-- IPsec SA creation
+### 9. NAT
 
-Use logs to find the real problem, not guess.
+Vérifier que le trafic VPN n'est pas traduit comme du trafic Internet normal lorsque la configuration exige une exemption NAT.
 
-### Step 12 — Test Traffic
-Test the service the user needs:
-- DNS TCP 53
-- HTTPS TCP 443
-- SMB TCP 445
-- RDP TCP 3389
+### 10. Journaux
 
-### Step 13 — Return Traffic
-Check that the response path works on both sides: routes, firewall rules, VPN selectors, NAT.
+Rechercher notamment les échecs IKE, les erreurs d'authentification, les paramètres incompatibles et les traffic selectors incorrects.
 
----
+### 11. Tester le vrai service
 
-## Common Root Causes
-- Wrong peer IP
-- Internet down
-- Wrong pre-shared key
-- IKE mismatch
-- IPsec proposal mismatch
-- Wrong local or remote network
-- Firewall blocking
-- Wrong route
-- Wrong NAT
-- Expired certificate
-- Remote firewall down
+Exemples : DNS 53, HTTPS 443, SMB 445 et RDP 3389.
 
----
+### 12. Trafic de retour
 
-## Decision Flow
-Cannot reach remote site
-↓
-Local network OK?
-├── NO → fix local network
-└── YES
-↓
-Peer reachable?
-├── NO → fix WAN/routing
-└── YES
-↓
-IKE OK?
-├── NO → check peer, auth, IKE params
-└── YES
-↓
-IPsec UP?
-├── NO → check IPsec params/selectors
-└── YES
-↓
-Routes OK?
-├── NO → fix routing
-└── YES
-↓
-Firewall allows?
-├── NO → fix policy
-└── YES
-↓
-NAT OK?
-├── NO → fix NAT
-└── YES
-↓
-Test service
-↓
-Check return path
-↓
-Validate
-
-
-
----
+Vérifier aussi les routes, règles, sélecteurs VPN et NAT dans le sens retour.
 
 ## Validation
 
-Resolved only if:
-- Tunnel is UP
-- Required traffic passes
-- Return traffic works
-- User reaches the resource
+Le problème est résolu lorsque le tunnel est établi, le service demandé fonctionne et le trafic de retour est valide.
 
-A tunnel UP alone is not enough.
+## Résumé
 
----
-
-## Escalation
-
-Escalate if:
-- ISP or WAN failure suspected
-- Peer managed by another company
-- Certificate/PKI issues
-- Configuration needs higher privileges
-- Security policy changes need approval
-
----
-
-## Key Lesson
-
-Order to follow:
-Local → Internet → Peer → IKE → Auth → IPsec → Routing → Firewall → NAT → Logs → Test → Return path → Validate
-
-Do not change encryption or routing randomly. Identify the failing layer first.
+```text
+Local
+↓
+WAN
+↓
+Pair
+↓
+IKE
+↓
+Authentification
+↓
+IPsec
+↓
+Routage
+↓
+Pare-feu
+↓
+NAT
+↓
+Journaux
+↓
+Test du service
+↓
+Trafic de retour
+↓
+Validation
+```
