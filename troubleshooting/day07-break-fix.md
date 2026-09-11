@@ -2,55 +2,43 @@
 
 ## Scénario
 
-Un utilisateur ne pouvait pas créer de fichier dans un dossier de test local. L'objectif était d'utiliser Process Monitor pour trouver l'opération refusée.
+Sarah pouvait lire C:\RKT-Day07\Restricted mais ne pouvait pas créer ou modifier un fichier.
 
-## Système concerné
+## Environnement
 
 | Élément | Valeur |
 |---|---|
-| Poste | `W11-01` |
-| Domaine | `corp.rktlab.test` |
-| Utilisateur | `CORP\sarah.tremblay` |
-| Dossier | `C:\RKT-Day07\Restricted` |
+| Poste | W11-01 |
+| Domaine | corp.rktlab.test |
+| Utilisateur | CORP\sarah.tremblay |
+| Dossier | C:\RKT-Day07\Restricted |
 
-## Symptôme
+## Diagnostic
 
-Sarah pouvait lire le dossier, mais pas créer ou modifier un fichier.
+Filtres Process Monitor :
 
-## Diagnostic avec Process Monitor
+- Result is ACCESS DENIED
+- Path begins with C:\RKT-Day07\Restricted
 
-Filtres appliqués :
+Commande utilisée pour reproduire le problème :
 
-```text
-Result is ACCESS DENIED
-Path begins with C:\RKT-Day07\Restricted
-```
+- New-Item -ItemType File -Path "C:\RKT-Day07\Restricted\sarah-test.txt"
 
-Reproduction :
-
-```powershell
-New-Item -ItemType File -Path "C:\RKT-Day07\Restricted\sarah-test.txt"
-```
-
-Process Monitor a montré une opération `ACCESS DENIED`.
+Process Monitor a montré l'opération refusée.
 
 ## Cause
 
-Le compte possédait uniquement les permissions `Read and Execute`. La permission `Modify` manquait.
+Le compte avait Read and Execute, mais pas Modify.
 
 ## Correction
 
-```cmd
-icacls "C:\RKT-Day07\Restricted" /grant:r "CORP\sarah.tremblay:(OI)(CI)(M)"
-```
+- icacls "C:\RKT-Day07\Restricted" /grant:r "CORP\sarah.tremblay:(OI)(CI)(M)"
 
-> Cette permission directe sert uniquement au scénario local de dépannage. Les partages du Day 05 utilisent des groupes AGDLP.
+Cette permission directe sert seulement au scénario local. Les partages du Day 05 utilisent AGDLP.
 
 ## Validation
 
-```powershell
-New-Item -ItemType File -Path "C:\RKT-Day07\Restricted\sarah-test.txt" -Force
-Get-Item "C:\RKT-Day07\Restricted\sarah-test.txt"
-```
+- New-Item -ItemType File -Path "C:\RKT-Day07\Restricted\sarah-test.txt" -Force
+- Get-Item "C:\RKT-Day07\Restricted\sarah-test.txt"
 
-Le fichier est créé correctement après la correction.
+Le fichier peut ensuite être créé normalement.

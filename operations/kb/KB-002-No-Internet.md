@@ -6,42 +6,24 @@ Le poste ne peut pas accéder à Internet.
 
 ## Vérifications
 
-### 1. Configuration IP
+1. Configuration IP
+   - ipconfig /all
+   - réseau attendu : 10.10.10.0/24
+   - passerelle : 10.10.10.1
+   - DNS du domaine : 10.10.20.10
 
-```cmd
-ipconfig /all
-```
+2. Passerelle
+   - ping 10.10.10.1
 
-Pour `W11-01`, vérifier notamment :
+3. DNS
+   - Test-NetConnection 10.10.20.10 -Port 53
+   - Resolve-DnsName DC01.corp.rktlab.test -Server 10.10.20.10
 
-```text
-Réseau : 10.10.10.0/24
-Passerelle : 10.10.10.1
-DNS du domaine : 10.10.20.10
-```
+4. Accès Internet
+   - Test-NetConnection 1.1.1.1 -Port 443
 
-### 2. Passerelle
-
-```cmd
-ping 10.10.10.1
-```
-
-### 3. DNS
-
-```powershell
-Test-NetConnection 10.10.20.10 -Port 53
-Resolve-DnsName DC01.corp.rktlab.test -Server 10.10.20.10
-```
-
-### 4. Accès Internet
-
-```powershell
-Test-NetConnection 1.1.1.1 -Port 443
-```
-
-### 5. Navigateur
-
-Tester ensuite l'ouverture d'un site Web.
+5. Navigateur
+   - tester l'ouverture d'un site Web
 
 ## Validation
 

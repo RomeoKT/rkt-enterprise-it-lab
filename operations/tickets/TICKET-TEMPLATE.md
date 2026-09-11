@@ -1,52 +1,52 @@
 # TICKET-XXX — Titre du problème
 
-## Informations générales
+## Informations
 
-- **ID du ticket :** TICKET-XXX
-- **Date :** AAAA-MM-JJ
-- **Rapporté par :** Nom de l'utilisateur
-- **Catégorie :** Réseau / Active Directory / Poste client / Application / Périphérique / Sécurité
-- **Statut :** Ouvert / En cours / Résolu / Fermé
+- ID : TICKET-XXX
+- Date : AAAA-MM-JJ
+- Rapporté par : nom de l'utilisateur
+- Catégorie : Réseau / Active Directory / Poste client / Application / Périphérique / Sécurité
+- Statut : Ouvert / En cours / Résolu / Fermé
 
-## Impact et priorité
+## Priorité
 
-- **Impact :** Élevé / Moyen / Faible
-- **Urgence :** Élevée / Moyenne / Faible
-- **Priorité :** P1 / P2 / P3 / P4
-- **Utilisateurs touchés :** X
-- **SLA :** délai applicable
+- Impact : élevé / moyen / faible
+- Urgence : élevée / moyenne / faible
+- Priorité : P1 / P2 / P3 / P4
+- Utilisateurs touchés : X
+- SLA : délai applicable
 
-## Symptômes
+## Symptôme
 
-Décrire clairement ce que l'utilisateur observe.
+Décrire ce que l'utilisateur voit.
 
 ## Preuves
 
-- messages d'erreur
-- captures d'écran
-- journaux
-- commandes et résultats utiles
+- message d'erreur
+- capture d'écran
+- logs
+- commandes utiles
 
 ## Diagnostic
 
-Décrire les vérifications effectuées dans l'ordre.
+Lister les vérifications dans l'ordre.
 
-## Cause racine
+## Cause
 
-Indiquer la cause technique confirmée.
+Indiquer la cause confirmée.
 
 ## Résolution
 
-Décrire la correction appliquée.
+Indiquer la correction appliquée.
 
 ## Validation
 
-Expliquer comment le fonctionnement normal a été confirmé après la correction.
+Indiquer comment le fonctionnement a été confirmé.
 
 ## Escalade
 
-Indiquer si le ticket a été escaladé et pourquoi. Sinon : `Non requise`.
+Indiquer si une escalade a été nécessaire.
 
-## Notes de fermeture
+## Fermeture
 
-Résumer la cause, la correction et le résultat final.
+Résumer la cause, la correction et le résultat.

@@ -6,29 +6,19 @@ L'imprimante apparaît hors ligne ou les travaux ne s'impriment pas.
 
 ## Vérifications
 
-1. Vérifier que l'imprimante est allumée et connectée au réseau.
-2. Vérifier son adresse IP.
-3. Tester la connectivité :
-
-```cmd
-ping <IP_IMPRIMANTE>
-```
-
-4. Ouvrir **Paramètres → Bluetooth et appareils → Imprimantes et scanners**.
-5. Vérifier que le bon périphérique est sélectionné.
-6. Vérifier la file d'impression.
-7. Vérifier le service Print Spooler :
-
-```powershell
-Get-Service Spooler
-```
-
-8. Vérifier que le port de l'imprimante correspond à sa bonne adresse IP.
+1. vérifier que l'imprimante est allumée et connectée
+2. vérifier son adresse IP
+3. tester avec ping adresse_IP
+4. ouvrir Paramètres > Bluetooth et appareils > Imprimantes et scanners
+5. vérifier la bonne imprimante
+6. vérifier la file d'impression
+7. vérifier le service avec Get-Service Spooler
+8. vérifier que le port correspond à la bonne adresse IP
 
 ## Validation
 
-- l'imprimante apparaît en ligne
-- une page de test s'imprime correctement
+- imprimante en ligne
+- page de test imprimée
 
 ## Catégorie
 

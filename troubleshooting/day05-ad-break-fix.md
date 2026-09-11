@@ -1,104 +1,56 @@
 # Day 05 — Dépannage Active Directory
 
-## Incident 1 — GPO non appliquée
+Quatre incidents ont été testés dans le lab.
 
-### Symptôme
+## 1. GPO non appliquée
 
-La GPO attendue n'était pas appliquée à `W11-01`.
+Problème : W11-01 était hors de l'OU Laval\Computers.
 
-### Cause
+Correction : remettre le poste dans la bonne OU.
 
-`W11-01` avait été placé en dehors de l'OU `Laval\Computers`, où les GPO du poste étaient liées.
+Validation :
 
-### Correction
+- gpupdate /force
+- gpresult /scope computer /r
 
-Remettre `W11-01` dans l'OU appropriée.
+## 2. Groupe Finance manquant
 
-### Validation
+Problème : Sarah Tremblay n'était plus membre de GG_FINANCE_USERS.
 
-```cmd
-gpupdate /force
-gpresult /scope computer /r
-```
+Correction :
 
----
+- Add-ADGroupMember -Identity "GG_FINANCE_USERS" -Members "sarah.tremblay"
 
-## Incident 2 — Groupe de sécurité manquant
+Validation :
 
-### Symptôme
+- Get-ADGroupMember "GG_FINANCE_USERS"
+- nouvelle ouverture de session
+- accès à \\FS01\Finance
 
-Sarah Tremblay ne pouvait pas accéder aux ressources Finance.
+## 3. Permissions NTFS incorrectes
 
-### Cause
+Problème : DL_FINANCE_RW n'avait plus les permissions nécessaires.
 
-Le compte n'était plus membre de `GG_FINANCE_USERS`.
+Correction :
 
-### Correction
+- icacls "C:\Shares\Finance" /grant "CORP\DL_FINANCE_RW:(OI)(CI)(M)" /T
 
-```powershell
-Add-ADGroupMember -Identity "GG_FINANCE_USERS" -Members "sarah.tremblay"
-```
+Validation :
 
-### Validation
+- icacls "C:\Shares\Finance"
 
-```powershell
-Get-ADGroupMember "GG_FINANCE_USERS"
-```
+## 4. Lecteur réseau absent
 
-Après une nouvelle ouverture de session, l'accès à `\\FS01\Finance` fonctionne.
+Problème : le ciblage de GPO-Map-Drives ne visait pas correctement GG_FINANCE_USERS.
 
----
+Configuration attendue :
 
-## Incident 3 — Permissions NTFS incorrectes
+- chemin : \\FS01\Finance
+- lecteur : F:
+- groupe : CORP\GG_FINANCE_USERS
 
-### Symptôme
+Validation :
 
-Un utilisateur Finance pouvait ouvrir le partage, mais ne pouvait pas modifier les fichiers comme prévu.
-
-### Cause
-
-`DL_FINANCE_RW` ne possédait plus les permissions NTFS nécessaires.
-
-### Correction
-
-```cmd
-icacls "C:\Shares\Finance" /grant "CORP\DL_FINANCE_RW:(OI)(CI)(M)" /T
-```
-
-### Validation
-
-```cmd
-icacls "C:\Shares\Finance"
-```
-
----
-
-## Incident 4 — Lecteur réseau absent
-
-### Symptôme
-
-Le lecteur `F:` n'apparaissait pas pour Sarah Tremblay.
-
-### Cause
-
-Le ciblage de `GPO-Map-Drives` ne visait pas correctement `GG_FINANCE_USERS`.
-
-### Correction
-
-```text
-Chemin : \\FS01\Finance
-Lecteur : F:
-Groupe : CORP\GG_FINANCE_USERS
-```
-
-### Validation
-
-```cmd
-gpupdate /force
-gpresult /r
-net use
-```
-
-## Leçon principale
-
-Un problème d'accès Active Directory peut venir de plusieurs niveaux : emplacement dans l'OU, appartenance à un groupe, permissions NTFS ou ciblage d'une GPO.
+- gpupdate /force
+- gpresult /r
+- net use

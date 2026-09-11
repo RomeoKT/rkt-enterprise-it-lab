@@ -1,119 +1,26 @@
 # Day 03 — Dépannage pfSense
 
-## Incident 1 — Résolution DNS impossible
+Quatre problèmes ont été reproduits autour de pfSense.
 
-### Symptôme
+| Problème | Symptôme | Cause | Correction |
+|---|---|---|---|
+| DNS | IP fonctionne, noms non résolus | mauvais DNS | remettre le DNS prévu |
+| Règle pare-feu | USERS ne sort plus sur Internet | règle désactivée | réactiver la règle |
+| NAT sortant | passerelle OK, Internet KO | NAT désactivé | remettre le NAT automatique |
+| Passerelle | réseau local OK, réseaux distants KO | mauvaise passerelle | remettre 10.10.10.1 |
 
-- connectivité IP fonctionnelle
-- noms de domaine non résolus
+## Vérifications utiles
 
-### Cause
-
-Un mauvais serveur DNS était configuré pendant les tests du Day 03.
-
-### Correction
-
-Le poste a été remis sur le DNS Resolver pfSense utilisé à cette étape :
-
-```text
-10.10.10.1
-```
-
-### Validation
-
-```cmd
-nslookup google.com
-```
-
-> Après le déploiement d'Active Directory au Day 04, les postes membres utilisent `DC01` (`10.10.20.10`) comme DNS principal.
-
----
-
-## Incident 2 — Règle de pare-feu désactivée
-
-### Symptôme
-
-Le réseau USERS ne pouvait plus accéder à Internet.
-
-### Diagnostic
-
-Les journaux pfSense montraient du trafic bloqué.
+- nslookup google.com
+- logs pfSense
+- règles de l'interface USERS
+- configuration NAT
+- passerelle du poste
 
 ![Journaux pfSense](../screenshots/day03-firewall-log.png)
 
-### Cause
+Après le Day 04, les postes du domaine utilisent DC01, 10.10.20.10, comme DNS principal.
 
-La règle autorisant le trafic Internet depuis USERS avait été désactivée.
+## Ordre de vérification
 
-### Correction
-
-Réactiver la règle attendue.
-
-### Validation
-
-- trafic autorisé visible dans pfSense
-- accès Internet rétabli
-
----
-
-## Incident 3 — NAT sortant désactivé
-
-### Symptôme
-
-- passerelle locale accessible
-- accès Internet impossible
-
-### Cause
-
-Les adresses privées internes n'étaient plus traduites vers l'interface WAN.
-
-### Correction
-
-Rétablir le NAT sortant automatique dans pfSense.
-
-### Validation
-
-L'accès Internet fonctionne de nouveau.
-
----
-
-## Incident 4 — Mauvaise passerelle
-
-### Symptôme
-
-Le poste communiquait sur son réseau local, mais pas avec les réseaux distants.
-
-### Cause
-
-La passerelle par défaut du poste était incorrecte.
-
-### Correction
-
-```text
-Passerelle : 10.10.10.1
-```
-
-### Validation
-
-- passerelle accessible
-- routage vers les réseaux autorisés fonctionnel
-
-## Méthode retenue
-
-```text
-Configuration locale
-↓
-Passerelle
-↓
-DNS
-↓
-Routage
-↓
-Pare-feu
-↓
-NAT
-↓
-Journaux
-↓
-Validation
-```
+Configuration locale → passerelle → DNS → routage → pare-feu → NAT → logs.

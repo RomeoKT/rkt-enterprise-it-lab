@@ -6,19 +6,20 @@ L'utilisateur ne peut plus ouvrir sa session parce que son mot de passe est oubl
 
 ## Vérifications
 
-1. Confirmer l'identité de l'utilisateur selon la procédure de l'organisation.
-2. Vérifier que le compte existe et qu'il n'est pas désactivé.
-3. Vérifier si le compte est verrouillé.
+1. confirmer l'identité de l'utilisateur
+2. vérifier que le compte existe
+3. vérifier que le compte n'est pas désactivé
+4. vérifier si le compte est verrouillé
 
 ## Résolution avec ADUC
 
-1. Ouvrir `dsa.msc`.
-2. Rechercher l'utilisateur.
-3. Clic droit → **Réinitialiser le mot de passe**.
-4. Saisir un mot de passe temporaire.
-5. Pour un compte utilisateur standard, cocher **L'utilisateur doit changer le mot de passe à la prochaine ouverture de session**.
-6. Déverrouiller le compte si nécessaire.
-7. Valider.
+1. ouvrir dsa.msc
+2. rechercher l'utilisateur
+3. clic droit > Réinitialiser le mot de passe
+4. entrer un mot de passe temporaire
+5. demander le changement au prochain login
+6. déverrouiller le compte si nécessaire
+7. valider
 
 ## Validation
 

@@ -1,53 +1,50 @@
 # Day 10 — Wazuh, Sysmon et réponse aux incidents
 
-Le Day 10 devait relier `W11-01` à Wazuh, collecter des événements Windows/Sysmon et construire une petite investigation. L'installation de Wazuh a fonctionné, mais la communication entre l'agent Windows et `WAZUH01` n'a pas été finalisée dans le temps prévu.
+Wazuh a été installé sur WAZUH01. Le dashboard fonctionne, mais la connexion de W11-01 comme agent n'a pas été finalisée.
 
-Je garde quand même cette étape dans le projet, parce que le dépannage fait partie du lab et que je préfère montrer la limite plutôt que prétendre que tout a fonctionné.
+## WAZUH01
 
-## Ce qui a fonctionné
-
-| Élément | Résultat |
+| Élément | Valeur |
 |---|---|
-| `WAZUH01` | installé sur Ubuntu 24.04 LTS |
-| Adresse | `10.10.40.10/24` |
-| Passerelle | `10.10.40.1` |
+| Système | Ubuntu 24.04 LTS |
+| Adresse | 10.10.40.10/24 |
+| Passerelle | 10.10.40.1 |
 | Réseau | SECURITY |
 | Wazuh Server / Indexer / Dashboard | installés |
-| Dashboard | accessible depuis le poste hôte |
+| Dashboard | accessible |
 
-## Ce qui a bloqué
+## Problème rencontré
 
-`W11-01` se trouvait sur USERS et `WAZUH01` sur SECURITY. Le test TCP de `W11-01` vers `10.10.40.10:1514` échouait, même si `WAZUH01` pouvait joindre sa propre passerelle.
+W11-01 est sur USERS et WAZUH01 sur SECURITY.
 
-J'ai vérifié les règles pfSense, le routage, les ports Wazuh et le pare-feu, mais la communication agent-manager n'a pas été validée.
+Le test TCP vers 10.10.40.10 sur le port 1514 échouait. La communication agent-manager n'a donc pas été validée.
 
-Le détail est ici : [Day 10 — Dépannage de la connexion Wazuh](../troubleshooting/day10-wazuh-connectivity.md).
+Voir [Day 10 — Dépannage de la connexion Wazuh](../troubleshooting/day10-wazuh-connectivity.md).
 
-## Sysmon et événements étudiés
-
-Je me suis concentré sur quelques Event IDs faciles à relier à une investigation :
+## Événements étudiés
 
 | Source | Event ID | Signification |
 |---|---:|---|
-| Sysmon | `1` | création d'un processus |
-| Sysmon | `3` | connexion réseau |
-| Sysmon | `11` | création d'un fichier |
-| Windows Security | `4624` | ouverture de session réussie |
-| Windows Security | `4625` | ouverture de session échouée |
-| Windows Security | `4720` | création d'un compte utilisateur |
+| Sysmon | 1 | création d'un processus |
+| Sysmon | 3 | connexion réseau |
+| Sysmon | 11 | création d'un fichier |
+| Windows Security | 4624 | ouverture de session réussie |
+| Windows Security | 4625 | ouverture de session échouée |
+| Windows Security | 4720 | création d'un compte utilisateur |
 
-La collecte centralisée de ces événements dans Wazuh n'est pas présentée comme réussie dans ce dépôt.
+La collecte de ces événements dans Wazuh n'est pas présentée comme réussie.
 
-## Méthode d'analyse
+## Réponse aux incidents
 
-Même sans la collecte complète, j'ai travaillé la logique d'une investigation simple : identifier la machine et le compte, remettre les événements dans l'ordre, vérifier ce qui se passe avant et après, déterminer si l'activité est normale ou suspecte, puis documenter les actions possibles.
+J'ai travaillé une méthode simple : identifier la machine et le compte, mettre les événements dans l'ordre, vérifier ce qui se passe avant et après, puis documenter les actions possibles.
 
-Pour le scénario d'authentification, j'ai aussi étudié deux références MITRE ATT&CK : `T1136.001` pour la création d'un compte local et `T1078` pour l'utilisation de comptes valides.
+Références MITRE ATT&CK étudiées :
 
-Le rapport est ici : [IR-001 — Suspicious Authentication](../operations/incidents/IR-001-Suspicious-Authentication.md).
+- T1136.001 — Create Account: Local Account
+- T1078 — Valid Accounts
 
-## Ce que je retiens
+Voir [IR-001 — Authentification suspecte](../operations/incidents/IR-001-Suspicious-Authentication.md).
 
-Un dashboard accessible ne veut pas dire que toute la chaîne de collecte fonctionne. Ce Day m'a forcé à séparer installation, réseau, service et collecte de logs au lieu de considérer Wazuh comme un seul bloc.
+## Statut
 
-Il reste une vraie tâche à reprendre : faire fonctionner `W11-01` → agent Wazuh → `WAZUH01`, puis valider la remontée des événements avec des preuves réelles.
+Serveur Wazuh installé. Agent Windows à reprendre.

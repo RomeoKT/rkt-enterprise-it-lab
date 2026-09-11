@@ -1,40 +1,48 @@
 # Day 10 — Dépannage de la connexion Wazuh
 
-Le problème du Day 10 n'était pas l'accès au dashboard. Le vrai blocage était la communication entre `W11-01` et le manager Wazuh.
+Le dashboard Wazuh fonctionnait. Le problème était la communication entre W11-01 et WAZUH01.
 
-## Situation
+## Environnement
 
 | Machine | Adresse | Réseau |
 |---|---|---|
-| `W11-01` | `10.10.10.50` | USERS |
-| `WAZUH01` | `10.10.40.10` | SECURITY |
-| pfSense | `10.10.10.1` / `10.10.40.1` | routage entre les deux zones |
+| W11-01 | 10.10.10.50 | USERS |
+| WAZUH01 | 10.10.40.10 | SECURITY |
+| pfSense | 10.10.10.1 / 10.10.40.1 | routage entre les zones |
 
-Depuis `W11-01`, le ping vers `10.10.40.10` expirait et `Test-NetConnection 10.10.40.10 -Port 1514` retournait `TcpTestSucceeded : False`.
+## Symptômes
 
-Du côté de `WAZUH01`, l'interface `ens33` avait bien `10.10.40.10/24` et la passerelle `10.10.40.1` répondait. Le serveur n'était donc pas simplement hors réseau.
+Depuis W11-01 :
 
-## Ce que j'ai vérifié
+- ping vers 10.10.40.10 en échec
+- Test-NetConnection 10.10.40.10 -Port 1514 retourne False
 
-1. adresse IP et route par défaut de `WAZUH01`
-2. accès à la passerelle SECURITY
-3. test TCP 1514 depuis `W11-01`
-4. règles pfSense sur l'interface USERS
-5. ports 1514/1515 prévus pour Wazuh
-6. pare-feu local afin de ne pas confondre ICMP et trafic TCP Wazuh
+Depuis WAZUH01 :
 
-Un problème DNS local avec `127.0.0.53` a aussi été observé sur `WAZUH01`. Je l'ai gardé séparé du problème USERS → SECURITY pour éviter de mélanger deux pannes différentes.
+- interface ens33 sur 10.10.40.10/24
+- passerelle 10.10.40.1 joignable
+
+## Vérifications faites
+
+- adresse IP et route par défaut de WAZUH01
+- passerelle SECURITY
+- test TCP 1514 depuis W11-01
+- règles pfSense sur USERS
+- ports 1514 et 1515
+- pare-feu local
+
+Un problème DNS local avec 127.0.0.53 a aussi été vu sur WAZUH01. Il a été gardé séparé du problème USERS vers SECURITY.
 
 ## Résultat
 
-La communication agent-manager n'a pas été validée pendant le temps du Day 10. Le dashboard restait accessible depuis l'hôte, donc je n'ai pas considéré l'installation Wazuh entière comme défectueuse.
+La communication agent-manager n'a pas été validée pendant le Day 10.
 
-Le point à reprendre est le chemin réseau/service entre l'endpoint et le manager.
+Le dashboard restait accessible depuis l'hôte, donc l'installation Wazuh de base fonctionnait.
 
-## Reprise prévue
+## À reprendre
 
-La prochaine fois, je commencerai par confirmer que Wazuh écoute bien sur les ports attendus, puis je regarderai les logs pfSense pendant un test depuis `W11-01`. Ensuite : ordre des règles USERS, pare-feu Ubuntu et, si nécessaire, capture de paquets des deux côtés de pfSense.
-
-## Ce que ce problème m'a appris
-
-Un service Web accessible et un agent capable de joindre son manager sont deux validations différentes. Le dépannage est plus simple quand je teste chaque morceau de la chaîne séparément au lieu de conclure directement que « Wazuh ne marche pas ».
+1. confirmer que Wazuh écoute sur les ports attendus
+2. regarder les logs pfSense pendant un test depuis W11-01
+3. vérifier l'ordre des règles USERS
+4. vérifier le pare-feu Ubuntu
+5. faire une capture de paquets si nécessaire
