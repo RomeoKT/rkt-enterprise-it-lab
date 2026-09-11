@@ -42,11 +42,7 @@ Utilisé pour inspecter les processus, PID, processus parents, utilisation CPU/m
 
 ### Process Monitor
 
-Utilisé pour diagnostiquer un problème de permissions NTFS sur :
-
-```text
-C:\RKT-Day07\Restricted
-```
+Utilisé pour diagnostiquer un problème de permissions NTFS dans `C:\RKT-Day07\Restricted`.
 
 Le filtre `ACCESS DENIED` a permis d'identifier l'opération bloquée.
 
@@ -54,7 +50,7 @@ Voir [Day 07 — Dépannage avec Process Monitor](../troubleshooting/day07-break
 
 ### Autoruns
 
-Utilisé pour vérifier les éléments configurés au démarrage, notamment : Logon, Services, Scheduled Tasks et Drivers.
+Utilisé pour vérifier les éléments configurés au démarrage, notamment Logon, Services, Scheduled Tasks et Drivers.
 
 ### TCPView
 
@@ -84,23 +80,16 @@ Voir [le modèle de ticket](../operations/tickets/TICKET-TEMPLATE.md).
 
 ## Méthode de dépannage
 
-```text
-Symptôme
-↓
-Collecte des informations
-↓
-Reproduction du problème
-↓
-Tests ciblés
-↓
-Identification de la cause
-↓
-Correction
-↓
-Validation
-↓
-Documentation
-```
+La méthode utilisée est simple :
+
+1. identifier le symptôme
+2. collecter les informations utiles
+3. reproduire le problème
+4. faire des tests ciblés
+5. trouver la cause
+6. appliquer la correction
+7. valider le résultat
+8. documenter le ticket
 
 ## Ce que j'ai appris
 

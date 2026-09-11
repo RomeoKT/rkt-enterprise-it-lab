@@ -1,6 +1,6 @@
 # RKT Enterprise IT Lab
 
-Projet personnel de laboratoire visant à reproduire une petite infrastructure d'entreprise et à pratiquer des tâches concrètes en réseau, Windows Server, Active Directory, PowerShell, dépannage poste client et support TI.
+Projet personnel de laboratoire visant à reproduire une petite infrastructure d'entreprise et à pratiquer des tâches concrètes en réseau, Windows Server, Active Directory, PowerShell, dépannage poste client, support TI et supervision de sécurité.
 
 > **Statut :** projet en développement. Il s'agit d'un environnement de laboratoire, pas d'un environnement de production. Les comptes et données utilisés dans le dépôt sont fictifs.
 
@@ -12,7 +12,8 @@ Projet personnel de laboratoire visant à reproduire une petite infrastructure d
 - Automatiser des tâches d'administration avec PowerShell
 - Diagnostiquer des problèmes réseau, Windows et Active Directory
 - Documenter les incidents avec une approche de support TI
-- Étudier progressivement Microsoft Entra ID, Intune, Autopilot, Fortinet et les VPN
+- Étudier Microsoft Entra ID, Intune, Autopilot, Fortinet et les VPN
+- Installer Wazuh et pratiquer une méthode simple de réponse aux incidents
 
 ## État des technologies
 
@@ -36,7 +37,9 @@ Projet personnel de laboratoire visant à reproduire une petite infrastructure d
 | Windows Autopilot | Étudié et documenté |
 | FortiGate | Étudié et documenté |
 | VPN IPsec | Étudié et documenté |
-| Wazuh / Sysmon | Prévu |
+| Wazuh | Installé, dashboard accessible |
+| Sysmon | Étudié, intégration Wazuh non terminée |
+| Réponse aux incidents | Scénario documenté |
 
 ## Architecture
 
@@ -62,7 +65,8 @@ Les quatre zones sont des réseaux virtuels **host-only** VMware. Ce ne sont pas
 | `FS01` | Windows Server 2025, services de fichiers SMB |
 | `W11-01` | Poste utilisateur Windows 11 |
 | `ADMIN01` | Poste d'administration Windows 11 |
-| `UBUNTU01` | Pratique Linux et futurs tests de sécurité |
+| `UBUNTU01` | Pratique Linux |
+| `WAZUH01` | Ubuntu 24.04 LTS, serveur et dashboard Wazuh |
 
 ## Segmentation réseau
 
@@ -84,11 +88,7 @@ Voir :
 
 ## Active Directory et services Windows
 
-Le domaine du laboratoire est :
-
-```text
-corp.rktlab.test
-```
+Le domaine du laboratoire est `corp.rktlab.test`.
 
 Les travaux réalisés comprennent :
 
@@ -149,6 +149,20 @@ Voir :
 - [KB-002 — Pas d'accès Internet](operations/kb/KB-002-No-Internet.md)
 - [KB-003 — Imprimante réseau](operations/kb/KB-003-Network-Printer.md)
 
+## Sécurité et supervision
+
+`WAZUH01` a été installé sur le réseau SECURITY avec Ubuntu 24.04 LTS. Le dashboard Wazuh est accessible depuis le poste hôte.
+
+La connexion de `W11-01` comme agent Wazuh n'a pas été finalisée : la communication entre `10.10.10.50` et `10.10.40.10` sur les ports Wazuh n'a pas été validée. Le dépôt ne prétend donc pas que les événements Windows ou Sysmon de `W11-01` ont été centralisés dans Wazuh.
+
+Cette limite est documentée au lieu d'être masquée. Le Day 10 couvre aussi les bases de Sysmon, les principaux événements Windows de connexion et une méthode simple de réponse aux incidents.
+
+Voir :
+
+- [Day 10 — Wazuh, Sysmon et réponse aux incidents](docs/day10-wazuh-sysmon-incident-response.md)
+- [Day 10 — Dépannage de la connexion Wazuh](troubleshooting/day10-wazuh-connectivity.md)
+- [IR-001 — Scénario d'authentification suspecte](operations/incidents/IR-001-Suspicious-Authentication.md)
+
 ## Documentation
 
 | Étape | Sujet | Statut |
@@ -162,6 +176,7 @@ Voir :
 | [Day 07](docs/day07-windows-endpoint-sysinternals.md) | Windows, Sysinternals et ITSM | Réalisé |
 | [Day 08](docs/day08-entra-intune-autopilot.md) | Entra ID, Intune et Autopilot | Étude |
 | [Day 09](docs/day09-fortinet-linux-vpn.md) | Fortinet, Linux et VPN | Étude / pratique |
+| [Day 10](docs/day10-wazuh-sysmon-incident-response.md) | Wazuh, Sysmon et réponse aux incidents | Lab partiel documenté |
 
 ## Sécurité du dépôt
 
@@ -171,3 +186,4 @@ Voir :
 - aucune capture réseau contenant des données réelles
 - données utilisateurs fictives dans `configs/users.csv`
 - fichiers de machines virtuelles et fichiers temporaires exclus par `.gitignore`
+- aucune preuve inventée pour les parties du laboratoire qui n'ont pas été validées

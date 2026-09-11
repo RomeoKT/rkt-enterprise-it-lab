@@ -16,32 +16,15 @@ Ajouter un serveur de fichiers, organiser les permissions avec AGDLP, appliquer 
 
 ## Comptes et départements
 
-Des comptes de test sont répartis dans les départements suivants :
-
-- Finance
-- HR
-- IT
-- Sales
-- Operations
+Des comptes de test sont répartis dans les départements suivants : Finance, HR, IT, Sales et Operations.
 
 Les noms d'objets Active Directory restent en anglais afin de correspondre à la configuration réelle du laboratoire.
 
 ## Modèle de permissions AGDLP
 
-Le modèle utilisé est :
+Le modèle utilisé est **Account → Global Group → Domain Local Group → Permission**.
 
-```text
-Account → Global Group → Domain Local Group → Permission
-```
-
-Exemple :
-
-```text
-Sarah Tremblay
-→ GG_FINANCE_USERS
-→ DL_FINANCE_RW
-→ \\FS01\Finance
-```
+Exemple Finance : `Sarah Tremblay` → `GG_FINANCE_USERS` → `DL_FINANCE_RW` → `\\FS01\Finance`.
 
 ![Modèle de permissions AGDLP](../diagrams/ad-permission-model.png)
 
@@ -51,12 +34,10 @@ Les permissions sont attribuées aux groupes plutôt qu'aux utilisateurs directe
 
 `FS01` héberge notamment les partages SMB suivants :
 
-```text
-\\FS01\Finance
-\\FS01\HR
-\\FS01\IT
-\\FS01\Public
-```
+- `\\FS01\Finance`
+- `\\FS01\HR`
+- `\\FS01\IT`
+- `\\FS01\Public`
 
 ### Permissions de partage et NTFS
 
@@ -74,7 +55,7 @@ Les GPO suivantes ont été créées dans le laboratoire :
 - `GPO-Account-Lockout`
 - `GPO-Windows-Firewall`
 
-Validation :
+Commandes utilisées pour valider l'application des stratégies :
 
 ```cmd
 gpupdate /force
@@ -84,11 +65,7 @@ gpresult /h C:\gpresult.html
 
 ## Mappage de lecteurs
 
-Les utilisateurs Finance reçoivent :
-
-```text
-F: → \\FS01\Finance
-```
+Les utilisateurs Finance reçoivent le lecteur `F:` vers `\\FS01\Finance`.
 
 Le mappage est géré avec Group Policy Preferences et un ciblage par groupe de sécurité.
 

@@ -26,23 +26,15 @@ Notions étudiées : inscription des appareils, profils de configuration, politi
 
 ## Windows Autopilot
 
-```text
-Appareil enregistré
-↓
-Profil Autopilot assigné
-↓
-Premier démarrage
-↓
-Connexion de l'utilisateur
-↓
-Microsoft Entra Join
-↓
-Inscription Intune
-↓
-Politiques et applications
-↓
-Appareil prêt
-```
+Le flux étudié est le suivant :
+
+1. l'appareil est enregistré dans Autopilot
+2. un profil Autopilot lui est assigné
+3. l'utilisateur démarre le poste pour la première fois
+4. le poste rejoint Microsoft Entra ID
+5. l'appareil est inscrit dans Intune
+6. les politiques et applications sont appliquées
+7. le poste est prêt pour l'utilisateur
 
 ![Flux Windows Autopilot](../diagrams/autopilot-device-flow.png)
 
