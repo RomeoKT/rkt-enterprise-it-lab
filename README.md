@@ -45,6 +45,7 @@ Les réseaux internes sont des réseaux VMware host-only. pfSense fait le routag
 | [Day 08](docs/day08-entra-intune-autopilot.md) | Entra ID, Intune et Autopilot | étude |
 | [Day 09](docs/day09-fortinet-linux-vpn.md) | Fortinet, Linux et VPN | étude + pratique Linux |
 | [Day 10](docs/day10-wazuh-sysmon-incident-response.md) | Wazuh, Sysmon et réponse aux incidents | partiel |
+| [Day 11](docs/day11-enterprise-operations.md) | tickets, escalade, change management et ITGC | en cours |
 
 ## Travail réalisé
 
@@ -64,6 +65,8 @@ Les scripts du dossier [scripts](scripts/) couvrent la création d'utilisateurs 
 
 Le Day 07 contient du dépannage Windows avec Sysinternals, des tickets Jira et trois articles de base de connaissances.
 
+Le Day 11 ajoute la priorisation de tickets, les escalades, un changement de pare-feu documenté et une mini revue ITGC. Les résultats restent à valider pendant les tests du lab.
+
 ### Sécurité
 
 WAZUH01 est installé et le dashboard fonctionne. La connexion de W11-01 comme agent Wazuh n'a pas été finalisée pendant le Day 10.
@@ -75,6 +78,7 @@ WAZUH01 est installé et le dashboard fonctionne. La connexion de W11-01 comme a
 - [Test-RKTNetwork.ps1](scripts/Test-RKTNetwork.ps1)
 - [Day 07 — Windows, Sysinternals et support TI](docs/day07-windows-endpoint-sysinternals.md)
 - [Day 10 — Dépannage Wazuh](troubleshooting/day10-wazuh-connectivity.md)
+- [Day 11 — Opérations TI](docs/day11-enterprise-operations.md)
 
 ## Limites
 
