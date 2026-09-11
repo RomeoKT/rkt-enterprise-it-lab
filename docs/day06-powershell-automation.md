@@ -16,15 +16,7 @@ Automatiser des tâches répétitives d'administration Active Directory et de di
 
 `New-RKTUsers.ps1` lit le fichier `configs/users.csv`.
 
-Colonnes utilisées :
-
-```text
-FirstName
-LastName
-Department
-Location
-Title
-```
+Colonnes utilisées : `FirstName`, `LastName`, `Department`, `Location` et `Title`.
 
 Pour chaque entrée valide, le script :
 
@@ -103,11 +95,7 @@ Des validations sont faites avant plusieurs opérations afin d'éviter des erreu
 
 ## Journalisation
 
-Les fichiers sont enregistrés sous :
-
-```text
-C:\RKTLogs
-```
+Les fichiers de log sont enregistrés dans `C:\RKTLogs`.
 
 Aucun mot de passe n'est stocké dans le dépôt.
 

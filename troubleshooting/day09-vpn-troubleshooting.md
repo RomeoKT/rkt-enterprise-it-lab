@@ -32,12 +32,7 @@ Vérifier des deux côtés :
 - chiffrement
 - intégrité
 
-Ports utilisés couramment :
-
-```text
-UDP 500
-UDP 4500
-```
+Ports utilisés couramment : UDP `500` et UDP `4500`.
 
 ### 5. Paramètres IPsec
 
@@ -77,30 +72,4 @@ Le problème est résolu lorsque le tunnel est établi, le service demandé fonc
 
 ## Résumé
 
-```text
-Local
-↓
-WAN
-↓
-Pair
-↓
-IKE
-↓
-Authentification
-↓
-IPsec
-↓
-Routage
-↓
-Pare-feu
-↓
-NAT
-↓
-Journaux
-↓
-Test du service
-↓
-Trafic de retour
-↓
-Validation
-```
+L'ordre à garder en tête est : réseau local, WAN, pair VPN, IKE, authentification, IPsec, routage, pare-feu, NAT, journaux, test du service, trafic de retour et validation.

@@ -46,11 +46,7 @@ Une requête DNS a été capturée afin d'observer la résolution d'un nom en ad
 
 ### TCP
 
-Une connexion TCP a été observée afin d'identifier le three-way handshake :
-
-```text
-SYN → SYN-ACK → ACK
-```
+Une connexion TCP a été observée afin d'identifier le three-way handshake : **SYN → SYN-ACK → ACK**.
 
 ![Capture TCP](../screenshots/day02-tcp-handshake.png)
 

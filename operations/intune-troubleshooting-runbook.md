@@ -8,34 +8,25 @@ Document d'étude. Les scénarios servent à organiser une méthode de diagnosti
 
 ### Vérifications
 
-1. Vérifier la connexion Internet.
-2. Vérifier l'heure et la date du téléphone.
-3. Vérifier les méthodes d'authentification enregistrées pour l'utilisateur.
-4. Vérifier si Microsoft Authenticator est disponible et correctement configuré.
+1. vérifier la connexion Internet
+2. vérifier l'heure et la date du téléphone
+3. vérifier les méthodes d'authentification enregistrées pour l'utilisateur
+4. vérifier si Microsoft Authenticator est disponible et correctement configuré
 
 ## Scénario 2 — Appareil joint à Entra ID mais absent d'Intune
 
 ### Vérifications
 
-1. Vérifier que l'utilisateur possède la licence nécessaire.
-2. Vérifier la portée d'inscription MDM.
-3. Vérifier les restrictions d'inscription.
-4. Sur le poste :
+1. vérifier que l'utilisateur possède la licence nécessaire
+2. vérifier la portée d'inscription MDM
+3. vérifier les restrictions d'inscription
+4. sur le poste, exécuter :
 
 ```cmd
 dsregcmd /status
 ```
 
-5. Si l'appareil est déjà inscrit, lancer une synchronisation :
-
-```text
-Paramètres
-→ Comptes
-→ Accès professionnel ou scolaire
-→ Compte de l'organisation
-→ Infos
-→ Synchroniser
-```
+5. si l'appareil est déjà inscrit, ouvrir **Paramètres → Comptes → Accès professionnel ou scolaire → Compte de l'organisation → Infos → Synchroniser**
 
 > `dsregcmd /leave` ne doit pas être utilisé comme simple commande de synchronisation. Cette commande retire l'enregistrement de l'appareil et doit être réservée à un scénario de réparation précis.
 
@@ -49,20 +40,11 @@ Vérifier l'assignation, le groupe ciblé, lancer une synchronisation et vérifi
 
 ## Méthode générale
 
-```text
-Identité
-↓
-Licence
-↓
-État de l'appareil
-↓
-Inscription
-↓
-Assignation
-↓
-Synchronisation
-↓
-Conformité
-↓
-Validation
-```
+1. vérifier l'identité de l'utilisateur
+2. vérifier la licence
+3. vérifier l'état de l'appareil
+4. vérifier l'inscription Intune
+5. vérifier l'assignation de la politique ou de l'application
+6. lancer une synchronisation si nécessaire
+7. vérifier la conformité
+8. valider le résultat
