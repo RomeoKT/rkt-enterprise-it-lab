@@ -4,259 +4,42 @@ param(
     [string]$DomainController = "10.10.20.10",
     [string]$FileServer = "10.10.20.20",
     [string]$InternetTarget = "1.1.1.1",
-    [string]$OutputPath = "C:\RKTLogs\network-test.csv",
-    [string]$LogPath = "C:\RKTLogs\network-test.log"
+    [string]$OutputPath = "C:\RKTLogs\network-test.csv"
 )
 
-$ErrorActionPreference = "Stop"
+$Directory = Split-Path $OutputPath -Parent
+if (-not (Test-Path $Directory)) {
+    New-Item -ItemType Directory -Path $Directory -Force | Out-Null
+}
 
 $Results = @()
 
-$OutputDirectory = Split-Path $OutputPath -Parent
-
-if (-not (Test-Path $OutputDirectory)) {
-    New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
-}
-
-function Write-Log {
-    param(
-        [string]$Level,
-        [string]$Message
-    )
-
-    $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $Entry = "[$Timestamp] [$Level] $Message"
-
-    Add-Content -Path $LogPath -Value $Entry
-}
-
-function Add-TestResult {
-    param(
-        [string]$Test,
-        [string]$Target,
-        [bool]$Passed,
-        [string]$Details
-    )
-
-    $Status = if ($Passed) {
-        "PASS"
-    }
-    else {
-        "FAIL"
-    }
+function Add-Result {
+    param($Test, $Target, $Passed)
 
     $script:Results += [PSCustomObject]@{
-        Test    = $Test
-        Target  = $Target
-        Status  = $Status
-        Details = $Details
+        Test = $Test
+        Target = $Target
+        Status = if ($Passed) { "OK" } else { "FAIL" }
     }
-
-    Write-Log $Status "$Test - $Target - $Details"
 }
 
-Write-Log "INFO" "Network validation started."
-
-# ------------------------------------------------
-# TEST 1 - Gateway
-# ------------------------------------------------
+Add-Result "Gateway" $Gateway (Test-Connection $Gateway -Count 1 -Quiet -ErrorAction SilentlyContinue)
+Add-Result "DC01" $DomainController (Test-Connection $DomainController -Count 1 -Quiet -ErrorAction SilentlyContinue)
+Add-Result "FS01" $FileServer (Test-Connection $FileServer -Count 1 -Quiet -ErrorAction SilentlyContinue)
 
 try {
-
-    $Passed = Test-Connection `
-        -ComputerName $Gateway `
-        -Count 2 `
-        -Quiet `
-        -ErrorAction SilentlyContinue
-
-    Add-TestResult `
-        "Gateway" `
-        $Gateway `
-        $Passed `
-        "ICMP connectivity"
+    Resolve-DnsName "corp.rktlab.test" -Server $DnsServer -ErrorAction Stop | Out-Null
+    Add-Result "DNS" $DnsServer $true
 }
 catch {
-
-    Add-TestResult `
-        "Gateway" `
-        $Gateway `
-        $false `
-        $_.Exception.Message
+    Add-Result "DNS" $DnsServer $false
 }
 
-# ------------------------------------------------
-# TEST 2 - DNS
-# ------------------------------------------------
-
-try {
-
-    Resolve-DnsName `
-        "corp.rktlab.test" `
-        -Server $DnsServer `
-        -ErrorAction Stop | Out-Null
-
-    Add-TestResult `
-        "DNS Resolution" `
-        $DnsServer `
-        $true `
-        "corp.rktlab.test resolved successfully"
-}
-catch {
-
-    Add-TestResult `
-        "DNS Resolution" `
-        $DnsServer `
-        $false `
-        $_.Exception.Message
-}
-
-# ------------------------------------------------
-# TEST 3 - Domain Controller
-# ------------------------------------------------
-
-try {
-
-    $Passed = Test-Connection `
-        -ComputerName $DomainController `
-        -Count 2 `
-        -Quiet `
-        -ErrorAction SilentlyContinue
-
-    Add-TestResult `
-        "Domain Controller" `
-        $DomainController `
-        $Passed `
-        "ICMP connectivity"
-}
-catch {
-
-    Add-TestResult `
-        "Domain Controller" `
-        $DomainController `
-        $false `
-        $_.Exception.Message
-}
-
-# ------------------------------------------------
-# TEST 4 - FS01
-# ------------------------------------------------
-
-try {
-
-    $Passed = Test-Connection `
-        -ComputerName $FileServer `
-        -Count 2 `
-        -Quiet `
-        -ErrorAction SilentlyContinue
-
-    Add-TestResult `
-        "File Server" `
-        $FileServer `
-        $Passed `
-        "ICMP connectivity"
-}
-catch {
-
-    Add-TestResult `
-        "File Server" `
-        $FileServer `
-        $false `
-        $_.Exception.Message
-}
-
-# ------------------------------------------------
-# TEST 5 - Internet
-# ------------------------------------------------
-
-try {
-
-    $Passed = Test-NetConnection `
-        -ComputerName $InternetTarget `
-        -Port 443 `
-        -InformationLevel Quiet `
-        -WarningAction SilentlyContinue
-
-    Add-TestResult `
-        "Internet" `
-        "${InternetTarget}:443" `
-        $Passed `
-        "TCP 443 connectivity"
-}
-catch {
-
-    Add-TestResult `
-        "Internet" `
-        "${InternetTarget}:443" `
-        $false `
-        $_.Exception.Message
-}
-
-# ------------------------------------------------
-# TEST 6 - DNS TCP 53
-# ------------------------------------------------
-
-try {
-
-    $Passed = Test-NetConnection `
-        -ComputerName $DnsServer `
-        -Port 53 `
-        -InformationLevel Quiet `
-        -WarningAction SilentlyContinue
-
-    Add-TestResult `
-        "DNS Port" `
-        "${DnsServer}:53" `
-        $Passed `
-        "TCP 53"
-}
-catch {
-
-    Add-TestResult `
-        "DNS Port" `
-        "${DnsServer}:53" `
-        $false `
-        $_.Exception.Message
-}
-
-# ------------------------------------------------
-# TEST 7 - SMB TCP 445
-# ------------------------------------------------
-
-try {
-
-    $Passed = Test-NetConnection `
-        -ComputerName $FileServer `
-        -Port 445 `
-        -InformationLevel Quiet `
-        -WarningAction SilentlyContinue
-
-    Add-TestResult `
-        "SMB Port" `
-        "${FileServer}:445" `
-        $Passed `
-        "TCP 445"
-}
-catch {
-
-    Add-TestResult `
-        "SMB Port" `
-        "${FileServer}:445" `
-        $false `
-        $_.Exception.Message
-}
-
-# ------------------------------------------------
-# RESULTS
-# ------------------------------------------------
+Add-Result "Internet 443" "$InternetTarget`:443" (Test-NetConnection $InternetTarget -Port 443 -InformationLevel Quiet -WarningAction SilentlyContinue)
+Add-Result "DNS 53" "$DnsServer`:53" (Test-NetConnection $DnsServer -Port 53 -InformationLevel Quiet -WarningAction SilentlyContinue)
+Add-Result "SMB 445" "$FileServer`:445" (Test-NetConnection $FileServer -Port 445 -InformationLevel Quiet -WarningAction SilentlyContinue)
 
 $Results | Format-Table -AutoSize
-
-$Results |
-    Export-Csv `
-        -Path $OutputPath `
-        -NoTypeInformation `
-        -Encoding UTF8
-
-Write-Log "INFO" "Network validation completed."
-Write-Host ""
-Write-Host "Results exported to $OutputPath"
+$Results | Export-Csv -Path $OutputPath -NoTypeInformation -Encoding UTF8
+Write-Host "Export: $OutputPath"
