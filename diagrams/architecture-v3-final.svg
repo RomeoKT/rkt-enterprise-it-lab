@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <rect width="1400" height="900" fill="#ffffff"/>
+  <style>
+    .title { font: 700 28px Arial, sans-serif; fill:#111; }
+    .label { font: 700 18px Arial, sans-serif; fill:#111; }
+    .body { font: 400 15px Arial, sans-serif; fill:#222; }
+    .small { font: 400 13px Arial, sans-serif; fill:#333; }
+    .box { fill:#fff; stroke:#222; stroke-width:2; rx:8; ry:8; }
+    .zone { fill:#fafafa; stroke:#555; stroke-width:2; rx:10; ry:10; }
+    .line { stroke:#222; stroke-width:2.2; fill:none; }
+    .dash { stroke:#666; stroke-width:1.8; fill:none; stroke-dasharray:8 8; }
+  </style>
+  <text x="700" y="48" text-anchor="middle" class="title">RKT Enterprise IT Lab — Architecture V3</text>
+  <rect x="610" y="80" width="180" height="64" class="box"/>
+  <text x="700" y="118" text-anchor="middle" class="label">Internet</text>
+  <line x1="700" y1="144" x2="700" y2="180" class="line"/>
+  <rect x="600" y="180" width="200" height="66" class="box"/>
+  <text x="700" y="208" text-anchor="middle" class="label">VMware VMnet8</text>
+  <text x="700" y="231" text-anchor="middle" class="body">WAN / NAT</text>
+  <line x1="700" y1="246" x2="700" y2="285" class="line"/>
+  <rect x="585" y="285" width="230" height="72" class="box"/>
+  <text x="700" y="316" text-anchor="middle" class="label">PFSENSE01</text>
+  <text x="700" y="341" text-anchor="middle" class="body">Firewall · Routage · NAT</text>
+  <line x1="700" y1="357" x2="700" y2="395" class="line"/>
+  <line x1="180" y1="395" x2="1220" y2="395" class="line"/>
+  <line x1="180" y1="395" x2="180" y2="430" class="line"/>
+  <line x1="520" y1="395" x2="520" y2="430" class="line"/>
+  <line x1="880" y1="395" x2="880" y2="430" class="line"/>
+  <line x1="1220" y1="395" x2="1220" y2="430" class="line"/>
+  <rect x="50" y="430" width="260" height="280" class="zone"/>
+  <text x="180" y="466" text-anchor="middle" class="label">USERS</text>
+  <text x="180" y="491" text-anchor="middle" class="body">VMnet10 · 10.10.10.0/24</text>
+  <rect x="95" y="535" width="170" height="84" class="box"/>
+  <text x="180" y="569" text-anchor="middle" class="label">W11-01</text>
+  <text x="180" y="593" text-anchor="middle" class="body">Windows 11</text>
+  <rect x="355" y="430" width="330" height="280" class="zone"/>
+  <text x="520" y="466" text-anchor="middle" class="label">SERVERS</text>
+  <text x="520" y="491" text-anchor="middle" class="body">VMnet11 · 10.10.20.0/24</text>
+  <rect x="385" y="525" width="125" height="102" class="box"/>
+  <text x="447" y="555" text-anchor="middle" class="label">DC01</text>
+  <text x="447" y="579" text-anchor="middle" class="small">10.10.20.10</text>
+  <text x="447" y="602" text-anchor="middle" class="small">AD DS · DNS · GPO</text>
+  <rect x="530" y="525" width="125" height="102" class="box"/>
+  <text x="592" y="555" text-anchor="middle" class="label">FS01</text>
+  <text x="592" y="579" text-anchor="middle" class="small">10.10.20.20</text>
+  <text x="592" y="602" text-anchor="middle" class="small">SMB · AGDLP</text>
+  <text x="520" y="667" text-anchor="middle" class="small">PowerShell automation</text>
+  <rect x="750" y="430" width="260" height="280" class="zone"/>
+  <text x="880" y="466" text-anchor="middle" class="label">MGMT</text>
+  <text x="880" y="491" text-anchor="middle" class="body">VMnet12 · 10.10.30.0/24</text>
+  <rect x="795" y="535" width="170" height="84" class="box"/>
+  <text x="880" y="569" text-anchor="middle" class="label">ADMIN01</text>
+  <text x="880" y="593" text-anchor="middle" class="body">Administration</text>
+  <rect x="1090" y="430" width="260" height="280" class="zone"/>
+  <text x="1220" y="466" text-anchor="middle" class="label">SECURITY</text>
+  <text x="1220" y="491" text-anchor="middle" class="body">VMnet13 · 10.10.40.0/24</text>
+  <rect x="1135" y="525" width="170" height="102" class="box"/>
+  <text x="1220" y="555" text-anchor="middle" class="label">WAZUH01</text>
+  <text x="1220" y="579" text-anchor="middle" class="small">10.10.40.10</text>
+  <text x="1220" y="602" text-anchor="middle" class="small">Server · Indexer · Dashboard</text>
+  <path d="M265 577 C510 760, 925 760, 1135 577" class="dash"/>
+  <text x="700" y="770" text-anchor="middle" class="small">Agent Wazuh depuis W11-01 : connexion prévue, non validée</text>
+  <text x="700" y="838" text-anchor="middle" class="small">Lab VMware segmenté avec pfSense — domaine corp.rktlab.test</text>
+</svg>
