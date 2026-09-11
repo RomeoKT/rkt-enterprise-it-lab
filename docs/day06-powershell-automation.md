@@ -1,104 +1,39 @@
-# Day 06 — Automatisation PowerShell
+# Day 06 — PowerShell pour l'administration
 
-## Objectif
-
-Automatiser des tâches répétitives d'administration Active Directory et de diagnostic avec PowerShell.
+À ce point du lab, j'avais déjà assez de tâches répétitives pour que l'automatisation devienne utile. J'ai donc écrit quatre scripts orientés administration et dépannage.
 
 ## Fichiers
 
-- [`configs/users.csv`](../configs/users.csv)
-- [`scripts/New-RKTUsers.ps1`](../scripts/New-RKTUsers.ps1)
-- [`scripts/Disable-RKTUser.ps1`](../scripts/Disable-RKTUser.ps1)
-- [`scripts/Get-RKTInventory.ps1`](../scripts/Get-RKTInventory.ps1)
-- [`scripts/Test-RKTNetwork.ps1`](../scripts/Test-RKTNetwork.ps1)
+- [`New-RKTUsers.ps1`](../scripts/New-RKTUsers.ps1)
+- [`Disable-RKTUser.ps1`](../scripts/Disable-RKTUser.ps1)
+- [`Get-RKTInventory.ps1`](../scripts/Get-RKTInventory.ps1)
+- [`Test-RKTNetwork.ps1`](../scripts/Test-RKTNetwork.ps1)
+- [`users.csv`](../configs/users.csv)
 
-## 1. Création automatisée d'utilisateurs
+## `New-RKTUsers.ps1`
 
-`New-RKTUsers.ps1` lit le fichier `configs/users.csv`.
+Le script lit `configs/users.csv`, vérifie les champs nécessaires, construit le nom d'utilisateur au format `prenom.nom`, choisit l'OU du département et ajoute le compte au bon groupe global.
 
-Colonnes utilisées : `FirstName`, `LastName`, `Department`, `Location` et `Title`.
+Le mot de passe temporaire est demandé de façon sécurisée et n'est jamais enregistré dans le dépôt. Les comptes déjà présents sont ignorés proprement au lieu de faire échouer tout le traitement.
 
-Pour chaque entrée valide, le script :
+## `Disable-RKTUser.ps1`
 
-1. vérifie les champs obligatoires
-2. génère un nom d'utilisateur au format `prenom.nom`
-3. vérifie l'OU du département
-4. vérifie le groupe global du département
-5. crée le compte Active Directory
-6. ajoute l'utilisateur au groupe approprié
-7. demande un mot de passe temporaire de façon sécurisée
-8. force le changement du mot de passe à la prochaine ouverture de session
-9. écrit le résultat dans un journal
+Ce script sert à traiter le départ d'un utilisateur : recherche du compte, désactivation, retrait des groupes départementaux, déplacement vers `Disabled-Accounts` et journalisation.
 
-Les comptes déjà existants sont ignorés proprement au lieu d'arrêter tout le traitement.
+## `Get-RKTInventory.ps1`
 
-## 2. Désactivation d'un utilisateur
+Il récupère les informations utiles d'un poste Windows : OS, version, mémoire, IPv4, stockage, utilisateur connecté et date de collecte. Le résultat peut être affiché et exporté en CSV.
 
-`Disable-RKTUser.ps1` :
+## `Test-RKTNetwork.ps1`
 
-- recherche le compte
-- désactive le compte Active Directory
-- retire les groupes départementaux
-- déplace le compte vers `Disabled-Accounts`
-- journalise les actions
-
-## 3. Inventaire d'un poste
-
-`Get-RKTInventory.ps1` collecte notamment :
-
-- nom du poste
-- système d'exploitation
-- version
-- mémoire RAM
-- adresses IPv4
-- taille et espace libre du disque `C:`
-- utilisateur connecté
-- date de collecte
-
-Le résultat est affiché dans PowerShell et exporté au format CSV.
-
-## 4. Validation réseau
-
-`Test-RKTNetwork.ps1` vérifie :
-
-- passerelle
-- résolution DNS interne
-- connectivité vers `DC01`
-- connectivité vers `FS01`
-- accès Internet en TCP 443
-- DNS en TCP 53
-- SMB en TCP 445
-
-Les résultats sont retournés avec un statut `PASS` ou `FAIL` et exportés en CSV.
+C'est le script le plus orienté dépannage. Il vérifie la passerelle, le DNS interne, `DC01`, `FS01`, Internet en TCP 443, DNS en TCP 53 et SMB en TCP 445. Chaque test ressort en `PASS` ou `FAIL`.
 
 ## Gestion des erreurs
 
-Les scripts utilisent notamment :
+J'ai utilisé `try/catch` et plusieurs validations avant les actions importantes : fichier CSV absent, colonne manquante, utilisateur déjà existant, OU inexistante, groupe absent ou service réseau inaccessible.
 
-```powershell
-try {
-    # Opération
-}
-catch {
-    # Journaliser l'erreur
-}
-```
+Les journaux sont écrits sous `C:\RKTLogs`.
 
-Des validations sont faites avant plusieurs opérations afin d'éviter des erreurs simples, par exemple :
+## Pourquoi je garde ces scripts dans le portfolio
 
-- fichier CSV absent
-- colonne CSV manquante
-- utilisateur déjà existant
-- OU inexistante
-- groupe Active Directory inexistant
-- service réseau inaccessible
-
-## Journalisation
-
-Les fichiers de log sont enregistrés dans `C:\RKTLogs`.
-
-Aucun mot de passe n'est stocké dans le dépôt.
-
-## Ce que j'ai appris
-
-Cette étape m'a permis de pratiquer les objets PowerShell, les propriétés, les pipelines, les variables, les fonctions, le traitement CSV, `try/catch`, la journalisation et l'automatisation de tâches Active Directory.
+Ils montrent mieux mon niveau PowerShell qu'une liste de cmdlets apprises par coeur. Chaque script répond à un besoin réel du lab et peut être relu séparément dans le dossier [`scripts/`](../scripts/).

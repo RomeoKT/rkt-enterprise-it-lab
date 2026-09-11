@@ -1,33 +1,24 @@
 # Day 04 — Active Directory et DNS
 
-## Objectif
+Cette étape transforme le lab en vrai environnement Windows de domaine. `DC01` devient le contrôleur de domaine et le serveur DNS interne.
 
-Déployer Active Directory Domain Services et DNS sur `DC01`, créer la structure du domaine et joindre `W11-01` au domaine.
-
-## Configuration de DC01
+## DC01
 
 | Paramètre | Valeur |
 |---|---|
 | Nom | `DC01` |
-| Adresse IP | `10.10.20.10` |
+| IPv4 | `10.10.20.10` |
 | Masque | `255.255.255.0` |
 | Passerelle | `10.10.20.1` |
 | DNS | `10.10.20.10` |
 
-Rôles installés :
+Rôles installés : Active Directory Domain Services et DNS Server.
 
-- Active Directory Domain Services
-- DNS Server
+Le domaine utilisé est `corp.rktlab.test`.
 
-## Domaine Active Directory
+## Organisation du domaine
 
-```text
-corp.rktlab.test
-```
-
-## Organisation des OU
-
-La structure comprend notamment :
+J'ai séparé les objets par sites, départements et rôles pour éviter de tout laisser dans les conteneurs par défaut.
 
 ```text
 corp.rktlab.test
@@ -49,26 +40,18 @@ corp.rktlab.test
 └── Disabled-Accounts
 ```
 
-Les OU de départements sont utilisées pour les comptes créés par l'automatisation PowerShell. Les OU de sites servent notamment à organiser les postes et à cibler certaines GPO.
+Les OU de départements sont ensuite réutilisées par mes scripts PowerShell. Les OU de sites servent notamment à organiser les postes et à cibler certaines GPO.
 
-## DNS des postes du domaine
+## Pourquoi le DNS compte autant ici
 
-Après le déploiement d'Active Directory, les postes membres du domaine utilisent `DC01` comme serveur DNS principal :
+Après la promotion de `DC01`, les postes membres du domaine utilisent `10.10.20.10` comme DNS principal. C'est indispensable pour retrouver les services Active Directory et joindre correctement le domaine.
 
-```text
-10.10.20.10
-```
-
-Cela permet de résoudre les enregistrements nécessaires à Active Directory.
-
-## Validation de DC01
+J'ai vérifié le domaine et les services principaux avec :
 
 ```powershell
 Get-ADDomain
 Get-Service DNS,Netlogon,KDC,ADWS
 ```
-
-Les services nécessaires au domaine ont été vérifiés après l'installation.
 
 ## Preuves
 
@@ -80,12 +63,8 @@ Les services nécessaires au domaine ont été vérifiés après l'installation.
 
 ## Résultat
 
-- domaine `corp.rktlab.test` créé
-- AD DS et DNS fonctionnels
-- structure d'OU créée
-- `W11-01` joint au domaine
-- résolution DNS interne validée
+`W11-01` est joint à `corp.rktlab.test`, la résolution DNS interne fonctionne et la structure AD est prête pour les GPO, les groupes et les services de fichiers du Day 05.
 
-## Ce que j'ai appris
+## Point clé
 
-Cette étape m'a permis de comprendre le rôle du DNS dans Active Directory, la différence entre les OU et les groupes, et les éléments nécessaires pour joindre correctement un poste Windows à un domaine.
+Le dépannage d'un domaine Windows revient très souvent au DNS. C'est la première chose que je vérifie quand un poste ne trouve plus un contrôleur de domaine ou une ressource interne.

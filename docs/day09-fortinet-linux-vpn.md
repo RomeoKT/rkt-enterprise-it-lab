@@ -1,43 +1,23 @@
-# Day 09 — Fortinet, bases Linux et VPN
+# Day 09 — Fortinet, Linux et VPN
 
-## Statut
+Le Day 09 sert surtout à élargir le lab sans faire semblant d'avoir déjà administré tous les produits. J'ai comparé les concepts FortiGate à ce que je connais déjà sur pfSense, pratiqué les commandes Linux de base et revu le fonctionnement d'un VPN IPsec.
 
-- **FortiGate :** étude et comparaison avec pfSense
-- **Linux :** commandes pratiquées sur Ubuntu
-- **VPN IPsec :** concepts et méthode de dépannage documentés
+## FortiGate : faire le lien avec pfSense
 
-Aucun FortiGate de production n'a été administré dans ce laboratoire.
-
-## Objectif
-
-Comprendre les concepts principaux de FortiGate, pratiquer les commandes Linux utiles au dépannage et étudier le fonctionnement d'un VPN IPsec.
-
-## FortiGate
-
-### Concepts étudiés
-
-- interfaces WAN et LAN
-- table de routage
-- route par défaut
-- politiques de pare-feu
-- services et ports
-- NAT
-- sessions
-- journaux
-
-### Comparaison FortiGate et pfSense
+Je me suis concentré sur les notions qui se transfèrent d'un pare-feu à l'autre : interfaces, routes, politiques de pare-feu, services, NAT, sessions et journaux.
 
 | FortiGate | pfSense |
 |---|---|
-| Interface | Interface |
 | Firewall Policy | Firewall Rule |
-| Service | Protocole / port |
+| Service | protocole / port |
 | Action | Pass / Block |
 | NAT | NAT |
 | Session | State |
 | Logging | Firewall Logs |
 
-## Bases Linux
+Le but n'était pas d'apprendre des menus par coeur, mais de reconnaître les mêmes concepts avec un autre produit.
+
+## Linux : commandes que j'ai pratiquées
 
 ```bash
 ip a
@@ -53,23 +33,21 @@ df -h
 free -h
 ```
 
+Je voulais être capable d'arriver sur une VM Ubuntu et de vérifier rapidement le réseau, un service, les logs et les ressources sans être bloqué par l'outil.
+
 ## VPN
 
-- **Remote Access VPN** : appareil individuel vers réseau d'entreprise
-- **Site-to-Site VPN** : réseau vers réseau
+J'ai travaillé la différence entre :
+
+- Remote Access VPN : un appareil distant rejoint le réseau de l'entreprise
+- Site-to-Site VPN : deux réseaux sont reliés par leurs passerelles VPN
 
 ![Flux VPN](../diagrams/vpn-flow.png)
 
-### Protocoles et ports importants
+Pour IPsec, les éléments que je retiens sont notamment UDP `500` pour IKE, UDP `4500` pour NAT Traversal et le protocole IP `50` pour ESP.
 
-- UDP `500` : IKE
-- UDP `4500` : NAT Traversal
-- protocole IP `50` : ESP, ce n'est pas le port TCP 50
+Le runbook complet est ici : [Day 09 — Dépannage VPN](../troubleshooting/day09-vpn-troubleshooting.md).
 
-## Dépannage VPN
+## Bilan
 
-Voir [Day 09 — Dépannage VPN](../troubleshooting/day09-vpn-troubleshooting.md).
-
-## Ce que j'ai appris
-
-Cette étape m'a permis de relier plusieurs concepts déjà pratiqués avec pfSense aux termes utilisés sur FortiGate, de renforcer mes bases Linux et de comprendre l'ordre général d'un diagnostic VPN.
+Cette journée m'a surtout appris à transférer ce que je sais déjà vers un autre environnement. Je n'ai pas déployé un FortiGate de production; je préfère garder cette limite claire dans le portfolio.

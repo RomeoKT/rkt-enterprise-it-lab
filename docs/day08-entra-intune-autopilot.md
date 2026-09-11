@@ -1,47 +1,35 @@
-# Day 08 — Microsoft Entra ID, Intune et Autopilot
+# Day 08 — Entra ID, Intune et Autopilot
 
-## Statut
+Cette étape est différente des précédentes : je n'avais pas de tenant Intune complet pour faire un vrai déploiement. J'ai donc gardé le Day 08 comme étude structurée, sans présenter de configuration cloud que je n'ai pas réalisée.
 
-**Étude et documentation.** Ces services n'ont pas été déployés comme environnement de production dans ce laboratoire.
+## Ce que j'ai étudié
 
-## Objectif
+### Microsoft Entra ID
 
-Comprendre les bases de la gestion moderne des identités et des postes Windows dans l'écosystème Microsoft.
+Utilisateurs, groupes, rôles, MFA, SSO et contrôle d'accès basé sur les rôles.
 
-## Microsoft Entra ID
+J'ai aussi travaillé la différence entre les trois états courants d'un poste :
 
-Notions étudiées : utilisateurs, groupes, rôles, authentification multifacteur, SSO et contrôle d'accès basé sur les rôles.
-
-## États d'un appareil
-
-| État | Usage général |
+| État | Cas général |
 |---|---|
-| Microsoft Entra registered | appareil personnel ou BYOD |
-| Microsoft Entra joined | appareil géré principalement dans le cloud |
-| Microsoft Entra hybrid joined | appareil lié à Active Directory local et Microsoft Entra ID |
+| Microsoft Entra registered | appareil personnel / BYOD |
+| Microsoft Entra joined | poste géré principalement dans le cloud |
+| Microsoft Entra hybrid joined | poste lié à AD local et à Entra ID |
 
-## Microsoft Intune
+### Microsoft Intune
 
-Notions étudiées : inscription des appareils, profils de configuration, politiques de conformité, déploiement d'applications, anneaux de mises à jour, actions à distance et synchronisation.
+Inscription des appareils, profils de configuration, politiques de conformité, déploiement d'applications, anneaux de mises à jour, actions à distance et synchronisation.
 
-## Windows Autopilot
+### Windows Autopilot
 
-Le flux étudié est le suivant :
-
-1. l'appareil est enregistré dans Autopilot
-2. un profil Autopilot lui est assigné
-3. l'utilisateur démarre le poste pour la première fois
-4. le poste rejoint Microsoft Entra ID
-5. l'appareil est inscrit dans Intune
-6. les politiques et applications sont appliquées
-7. le poste est prêt pour l'utilisateur
+Le flux que je voulais comprendre est simple : appareil enregistré, profil assigné, premier démarrage, connexion de l'utilisateur, Entra Join, inscription Intune, application des politiques et des applications.
 
 ![Flux Windows Autopilot](../diagrams/autopilot-device-flow.png)
 
 ## Dépannage
 
-Voir [Runbook — Dépannage Intune](../operations/intune-troubleshooting-runbook.md).
+J'ai préparé un petit runbook pour organiser le diagnostic d'un problème d'inscription, de conformité, d'application ou d'authentification : [Runbook — Dépannage Intune](../operations/intune-troubleshooting-runbook.md).
 
-## Ce que j'ai appris
+## Limite assumée
 
-Cette étape m'a permis de distinguer Active Directory local, Microsoft Entra ID, Intune et Windows Autopilot, ainsi que de comprendre le rôle général de chacun dans la gestion moderne des postes.
+Ce Day ne prouve pas une expérience d'administration Intune en production. Il montre plutôt que je comprends le rôle d'Entra ID, Intune et Autopilot et que je sais les replacer par rapport à l'Active Directory local déjà monté dans le lab.

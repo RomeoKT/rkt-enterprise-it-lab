@@ -1,10 +1,8 @@
-# Day 07 — Poste Windows, Sysinternals et ITSM
+# Day 07 — Windows, Sysinternals et support TI
 
-## Objectif
+Cette journée est plus proche d'un contexte de support : diagnostiquer un poste Windows, trouver une preuve avec les bons outils, puis documenter le ticket proprement.
 
-Pratiquer le dépannage d'un poste Windows, utiliser les outils Microsoft Sysinternals et documenter des incidents dans Jira Service Management.
-
-## Environnement
+## Poste utilisé
 
 | Élément | Valeur |
 |---|---|
@@ -14,63 +12,38 @@ Pratiquer le dépannage d'un poste Windows, utiliser les outils Microsoft Sysint
 | Serveur de fichiers | `FS01` |
 | Pare-feu | pfSense |
 | Service Desk | Jira Service Management |
-| Sysinternals | `C:\Tools\Sysinternals` |
 
-## Outils Windows utilisés
+## Outils Windows revus
 
-Les outils suivants ont été revus ou utilisés selon les scénarios :
+Task Manager, Services, Device Manager, Event Viewer, Disk Management, Resource Monitor, Windows Update, Defender, Firewall, RDP, lecteurs réseau, imprimantes et profils utilisateurs.
 
-- Task Manager
-- Services
-- Device Manager
-- Event Viewer
-- Disk Management
-- Resource Monitor
-- Windows Update
-- Windows Defender
-- Windows Firewall
-- RDP
-- lecteurs réseau
-- imprimantes
-- profils utilisateurs
+L'idée n'était pas d'ouvrir tous les outils pour faire une capture, mais de savoir lequel utiliser selon le symptôme.
 
 ## Sysinternals
 
 ### Process Explorer
 
-Utilisé pour inspecter les processus, PID, processus parents, utilisation CPU/mémoire et compte utilisateur associé.
+Je l'ai utilisé pour regarder les processus, PID, processus parents, compte utilisateur et consommation CPU/mémoire.
 
 ### Process Monitor
 
-Utilisé pour diagnostiquer un problème de permissions NTFS dans `C:\RKT-Day07\Restricted`.
+Le scénario le plus utile du Day 07 : un utilisateur pouvait lire `C:\RKT-Day07\Restricted` mais pas créer de fichier. Avec un filtre `ACCESS DENIED`, Procmon a permis de voir l'opération bloquée et de remonter à la permission manquante.
 
-Le filtre `ACCESS DENIED` a permis d'identifier l'opération bloquée.
+Le détail est dans [Day 07 — Dépannage avec Process Monitor](../troubleshooting/day07-break-fix.md).
 
-Voir [Day 07 — Dépannage avec Process Monitor](../troubleshooting/day07-break-fix.md).
+### Autoruns et TCPView
 
-### Autoruns
-
-Utilisé pour vérifier les éléments configurés au démarrage, notamment Logon, Services, Scheduled Tasks et Drivers.
-
-### TCPView
-
-Utilisé pour observer les connexions TCP/UDP actives, les ports locaux et distants ainsi que l'état des connexions.
-
-## ITSM
-
-Les notions suivantes ont été pratiquées : incident, demande de service, problème, changement, impact, urgence, priorité, SLA, escalade, cause racine et validation.
+Autoruns a servi à vérifier les éléments de démarrage. TCPView m'a permis de relier un processus à ses connexions et ports actifs.
 
 ## Jira Service Management
 
-Un projet de laboratoire nommé `RKT Service Desk Lab` a été utilisé pour documenter des scénarios de support.
+J'ai créé un petit Service Desk pour pratiquer la logique incident/demande, impact, urgence, priorité, cause, résolution et validation.
 
 ![File de tickets Jira](../screenshots/day07-jira-ticket-queue.png)
 
 ![Détail d'un ticket Jira](../screenshots/day07-jira-ticket-detail.png)
 
-## Modèle de ticket
-
-Voir [le modèle de ticket](../operations/tickets/TICKET-TEMPLATE.md).
+Le modèle utilisé est ici : [TICKET-TEMPLATE.md](../operations/tickets/TICKET-TEMPLATE.md).
 
 ## Base de connaissances
 
@@ -78,19 +51,10 @@ Voir [le modèle de ticket](../operations/tickets/TICKET-TEMPLATE.md).
 - [KB-002 — Diagnostiquer un problème d'accès Internet](../operations/kb/KB-002-No-Internet.md)
 - [KB-003 — Diagnostiquer une imprimante réseau](../operations/kb/KB-003-Network-Printer.md)
 
-## Méthode de dépannage
+## Ma méthode de dépannage
 
-La méthode utilisée est simple :
+Je pars du symptôme, je récupère les faits, je reproduis si possible, puis je teste une hypothèse à la fois. Je ne considère pas le ticket terminé avant d'avoir validé la correction et laissé une trace compréhensible de ce qui a été fait.
 
-1. identifier le symptôme
-2. collecter les informations utiles
-3. reproduire le problème
-4. faire des tests ciblés
-5. trouver la cause
-6. appliquer la correction
-7. valider le résultat
-8. documenter le ticket
+## Ce que cette étape apporte au projet
 
-## Ce que j'ai appris
-
-Cette étape m'a permis de pratiquer un diagnostic plus structuré sur Windows, d'utiliser Sysinternals pour obtenir des preuves et de mieux documenter les incidents avec une approche de support TI.
+Les Days précédents montrent surtout de la configuration. Celui-ci montre davantage comment je travaille quand quelque chose ne fonctionne pas : outils, preuve, correction et documentation.

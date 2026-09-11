@@ -1,75 +1,57 @@
-# Day 09 — Méthode de dépannage VPN IPsec
+# Day 09 — Dépannage VPN IPsec
 
-## Statut
-
-Scénario documenté pour pratiquer une méthode de diagnostic. Aucun tunnel de production n'est présenté comme ayant été administré.
+Ce document sert de méthode de diagnostic pour un VPN Site-to-Site. Je n'ai pas administré un tunnel FortiGate de production dans ce lab; le but est surtout de garder un ordre logique quand un VPN ne passe plus le trafic attendu.
 
 ## Scénario
 
-Deux réseaux doivent communiquer par un VPN Site-to-Site.
+Deux réseaux doivent communiquer à travers un tunnel IPsec entre deux pare-feu.
 
-## Ordre de diagnostic
+## Ordre de vérification
 
 ### 1. Réseau local
 
-Vérifier l'adresse IP, le masque, la passerelle et l'accès au pare-feu local.
+Je commence par l'adresse IP, le masque, la passerelle et l'accès au pare-feu local. Si le poste n'atteint même pas sa passerelle, le VPN n'est pas encore le bon endroit où chercher.
 
-### 2. Connectivité WAN
+### 2. WAN et pair distant
 
-Vérifier que les deux pare-feu ont une connectivité Internet et une route valide vers le pair distant.
+Les deux passerelles VPN doivent avoir une route valide vers Internet et vers l'adresse du pair distant.
 
-### 3. Adresse du pair VPN
+### 3. IKE
 
-Chaque pare-feu doit utiliser l'adresse WAN correcte du pair distant.
+Je compare des deux côtés : version IKE, méthode d'authentification, clé prépartagée ou certificats, chiffrement, intégrité et paramètres Diffie-Hellman.
 
-### 4. IKE
+Ports courants : UDP `500` pour IKE et UDP `4500` quand NAT Traversal est utilisé.
 
-Vérifier des deux côtés :
+### 4. Paramètres IPsec
 
-- version IKE
-- méthode d'authentification
-- clé prépartagée ou certificats
-- chiffrement
-- intégrité
+Je vérifie les réseaux locaux/distants, les proposals, les sélecteurs de trafic et les Security Associations.
 
-Ports utilisés couramment : UDP `500` et UDP `4500`.
+### 5. État du tunnel
 
-### 5. Paramètres IPsec
+Un tunnel `UP` n'est pas une preuve que l'application fonctionne. Il faut encore vérifier le routage, les règles de pare-feu et le trafic de retour.
 
-Vérifier les réseaux locaux/distants, le chiffrement, l'intégrité et les traffic selectors.
+### 6. Routage
 
-### 6. État du tunnel
+Chaque site doit avoir une route correcte vers le réseau distant.
 
-Un tunnel `UP` ne garantit pas que le trafic fonctionne.
+### 7. Pare-feu
 
-### 7. Routage
+Je vérifie que le trafic utile est permis, pas seulement que « le VPN est ouvert ». Le service testé doit correspondre au besoin réel : DNS 53, HTTPS 443, SMB 445, RDP 3389, etc.
 
-Chaque site doit savoir joindre le réseau distant.
+### 8. NAT
 
-### 8. Règles de pare-feu
+Je confirme que le trafic VPN n'est pas traduit comme du trafic Internet normal si la configuration exige une exemption NAT.
 
-Les règles doivent autoriser le trafic nécessaire entre les deux réseaux.
+### 9. Logs
 
-### 9. NAT
+Les journaux servent à distinguer un échec IKE, une erreur d'authentification, un proposal incompatible, un mauvais traffic selector ou un simple blocage de règle.
 
-Vérifier que le trafic VPN n'est pas traduit comme du trafic Internet normal lorsque la configuration exige une exemption NAT.
+### 10. Trafic de retour
 
-### 10. Journaux
-
-Rechercher notamment les échecs IKE, les erreurs d'authentification, les paramètres incompatibles et les traffic selectors incorrects.
-
-### 11. Tester le vrai service
-
-Exemples : DNS 53, HTTPS 443, SMB 445 et RDP 3389.
-
-### 12. Trafic de retour
-
-Vérifier aussi les routes, règles, sélecteurs VPN et NAT dans le sens retour.
+Je vérifie toujours les deux sens. Un paquet peut atteindre le serveur distant et quand même échouer si la réponse ne revient pas par le bon chemin.
 
 ## Validation
 
-Le problème est résolu lorsque le tunnel est établi, le service demandé fonctionne et le trafic de retour est valide.
+Je considère le problème résolu seulement quand le tunnel est établi **et** que le vrai service demandé fonctionne dans les deux sens.
 
-## Résumé
-
-L'ordre à garder en tête est : réseau local, WAN, pair VPN, IKE, authentification, IPsec, routage, pare-feu, NAT, journaux, test du service, trafic de retour et validation.
+C'est le point principal de ce runbook : ne pas s'arrêter au statut `UP` du tunnel.

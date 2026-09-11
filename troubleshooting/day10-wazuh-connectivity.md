@@ -1,59 +1,40 @@
 # Day 10 — Dépannage de la connexion Wazuh
 
-## Problème
+Le problème du Day 10 n'était pas l'accès au dashboard. Le vrai blocage était la communication entre `W11-01` et le manager Wazuh.
 
-`W11-01` ne réussissait pas à joindre `WAZUH01` sur les ports utilisés par l'agent Wazuh.
-
-## Environnement
+## Situation
 
 | Machine | Adresse | Réseau |
 |---|---|---|
 | `W11-01` | `10.10.10.50` | USERS |
 | `WAZUH01` | `10.10.40.10` | SECURITY |
-| pfSense | `10.10.10.1` / `10.10.40.1` | routage entre les deux réseaux |
+| pfSense | `10.10.10.1` / `10.10.40.1` | routage entre les deux zones |
 
-## Symptômes observés
+Depuis `W11-01`, le ping vers `10.10.40.10` expirait et `Test-NetConnection 10.10.40.10 -Port 1514` retournait `TcpTestSucceeded : False`.
 
-Depuis `W11-01` :
+Du côté de `WAZUH01`, l'interface `ens33` avait bien `10.10.40.10/24` et la passerelle `10.10.40.1` répondait. Le serveur n'était donc pas simplement hors réseau.
 
-- le ping vers `10.10.40.10` expirait
-- `Test-NetConnection 10.10.40.10 -Port 1514` retournait `TcpTestSucceeded : False`
+## Ce que j'ai vérifié
 
-Depuis `WAZUH01` :
+1. adresse IP et route par défaut de `WAZUH01`
+2. accès à la passerelle SECURITY
+3. test TCP 1514 depuis `W11-01`
+4. règles pfSense sur l'interface USERS
+5. ports 1514/1515 prévus pour Wazuh
+6. pare-feu local afin de ne pas confondre ICMP et trafic TCP Wazuh
 
-- l'interface `ens33` avait bien l'adresse `10.10.40.10/24`
-- la passerelle `10.10.40.1` répondait au ping
-- le ping vers `10.10.10.50` expirait
-
-Un autre problème DNS local a aussi été observé sur `WAZUH01` avec le résolveur `127.0.0.53`. Ce problème a été traité comme un point séparé du problème de communication inter-réseaux.
-
-## Vérifications faites
-
-1. vérification de l'adresse IP et de la route par défaut de `WAZUH01`
-2. test de la passerelle SECURITY `10.10.40.1`
-3. test TCP depuis `W11-01` vers `10.10.40.10:1514`
-4. vérification des règles pfSense sur l'interface USERS
-5. préparation de règles pour autoriser TCP `1514` et `1515` vers `WAZUH01`
-6. vérification du pare-feu Windows pour ne pas confondre le test ICMP avec le trafic Wazuh
+Un problème DNS local avec `127.0.0.53` a aussi été observé sur `WAZUH01`. Je l'ai gardé séparé du problème USERS → SECURITY pour éviter de mélanger deux pannes différentes.
 
 ## Résultat
 
-La communication entre `W11-01` et `WAZUH01` n'a pas été validée pendant le temps prévu pour le Day 10.
+La communication agent-manager n'a pas été validée pendant le temps du Day 10. Le dashboard restait accessible depuis l'hôte, donc je n'ai pas considéré l'installation Wazuh entière comme défectueuse.
 
-Le dashboard Wazuh restait accessible depuis le poste hôte, ce qui confirmait que l'installation de base de Wazuh fonctionnait. Le problème était donc traité comme un problème de chemin réseau ou de service entre l'endpoint et le serveur, et non comme une preuve que toute l'installation Wazuh était défectueuse.
+Le point à reprendre est le chemin réseau/service entre l'endpoint et le manager.
 
-## Ce qui reste à vérifier
+## Reprise prévue
 
-Pour reprendre ce dépannage plus tard, l'ordre logique est :
+La prochaine fois, je commencerai par confirmer que Wazuh écoute bien sur les ports attendus, puis je regarderai les logs pfSense pendant un test depuis `W11-01`. Ensuite : ordre des règles USERS, pare-feu Ubuntu et, si nécessaire, capture de paquets des deux côtés de pfSense.
 
-1. confirmer que le manager écoute sur TCP `1514` et `1515`
-2. vérifier les logs pfSense pendant un test depuis `W11-01`
-3. confirmer l'ordre des règles USERS vers SECURITY
-4. vérifier le pare-feu Ubuntu
-5. faire une capture de paquets sur les interfaces USERS et SECURITY si le problème persiste
+## Ce que ce problème m'a appris
 
-## Leçon retenue
-
-Le test du dashboard et le test de l'agent sont deux choses différentes. Un dashboard accessible ne prouve pas que le chemin `W11-01` → `WAZUH01` fonctionne.
-
-Le problème n'a pas été masqué dans le portfolio : l'intégration de l'agent est indiquée comme non terminée.
+Un service Web accessible et un agent capable de joindre son manager sont deux validations différentes. Le dépannage est plus simple quand je teste chaque morceau de la chaîne séparément au lieu de conclure directement que « Wazuh ne marche pas ».

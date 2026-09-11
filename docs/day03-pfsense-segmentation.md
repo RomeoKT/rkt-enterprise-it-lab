@@ -1,14 +1,10 @@
-# Day 03 — Segmentation réseau avec pfSense
+# Day 03 — pfSense et segmentation
 
-## Objectif
-
-Utiliser pfSense comme pare-feu et routeur entre les différentes zones du laboratoire.
-
-## Architecture
+Après les tests TCP/IP, j'ai utilisé pfSense comme point central entre les différents réseaux du lab.
 
 ![Architecture réseau segmentée](../diagrams/architecture-v2-segmented.png)
 
-## Réseaux
+## Les quatre zones
 
 | Zone | Réseau | Passerelle |
 |---|---|---|
@@ -17,33 +13,26 @@ Utiliser pfSense comme pare-feu et routeur entre les différentes zones du labor
 | MGMT | `10.10.30.0/24` | `10.10.30.1` |
 | SECURITY | `10.10.40.0/24` | `10.10.40.1` |
 
-Ces zones sont réalisées avec des réseaux VMware host-only. Elles servent à reproduire une segmentation logique dans le laboratoire.
+Ce sont des réseaux VMware host-only. pfSense assure le routage entre eux et le NAT vers Internet.
 
-## Services pfSense
+## Ce que j'ai configuré
 
-- DHCP sur le réseau USERS pendant les premiers tests
-- DNS Resolver pendant les tests précédant Active Directory
+- interfaces pour les quatre zones internes et le WAN
+- routage inter-réseaux
 - NAT sortant automatique
-- routage entre les réseaux internes
-- règles de pare-feu entre les zones
+- règles de pare-feu par interface
+- DHCP sur USERS pendant les premiers tests
+- DNS Resolver avant l'arrivée d'Active Directory
 
-> À partir du déploiement d'Active Directory, `DC01` (`10.10.20.10`) devient le DNS principal des postes membres du domaine.
+À partir du Day 04, `DC01` devient le DNS principal des postes du domaine.
 
-## Politique de filtrage
+## Logique de filtrage
 
-Principes appliqués :
+Je voulais éviter un simple « allow any ». Les postes USERS peuvent sortir vers Internet et joindre les services nécessaires sur SERVERS, mais l'accès vers MGMT reste bloqué. Le réseau MGMT garde les accès d'administration nécessaires.
 
-- `USERS → Internet` : autorisé
-- `USERS → SERVERS` : accès limité aux services nécessaires à Active Directory, DNS et SMB
-- `USERS → MGMT` : bloqué
-- `MGMT → réseaux internes` : accès d'administration autorisé selon le besoin
-- trafic non autorisé : bloqué
-
-Cette approche applique le principe du moindre privilège sans empêcher les services nécessaires au fonctionnement du domaine.
+La règle que je garde en tête : **une route indique où envoyer le trafic; une règle de pare-feu décide s'il a le droit de passer.**
 
 ## Validation
-
-Les règles et journaux pfSense ont été vérifiés directement dans l'interface Web.
 
 ![Règles pfSense](../screenshots/day03-firewall-rules.png)
 
@@ -51,7 +40,7 @@ Les règles et journaux pfSense ont été vérifiés directement dans l'interfac
 
 ![DNS Resolver](../screenshots/day03-dns-resolver.png)
 
-Les validations réseau ont aussi utilisé des tests comme :
+Quelques tests utilisés :
 
 ```powershell
 ping 10.10.10.1
@@ -59,17 +48,10 @@ Test-NetConnection 10.10.20.10 -Port 53
 Test-NetConnection 10.10.20.20 -Port 445
 ```
 
-## Dépannage
+## Ce que j'ai cassé pour tester
 
-Les problèmes suivants ont été volontairement reproduits :
+J'ai reproduit un mauvais DNS, une règle de pare-feu désactivée, un NAT sortant désactivé et une mauvaise passerelle. Les vérifications sont détaillées dans [Day 03 — Dépannage pfSense](../troubleshooting/day03-pfsense-break-fix.md).
 
-- mauvais serveur DNS
-- règle de pare-feu désactivée
-- NAT sortant désactivé
-- mauvaise passerelle
+## Bilan
 
-Voir [Day 03 — Dépannage pfSense](../troubleshooting/day03-pfsense-break-fix.md).
-
-## Ce que j'ai appris
-
-Cette étape m'a permis de comprendre le lien entre routage, règles de pare-feu, NAT et journaux réseau. Une route valide ne signifie pas automatiquement qu'un trafic est autorisé.
+Cette étape est devenue la base réseau du reste du projet. Elle m'a surtout appris à séparer routage, filtrage, NAT et DNS au lieu de traiter « le réseau » comme un seul problème.

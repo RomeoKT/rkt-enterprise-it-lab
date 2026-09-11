@@ -1,127 +1,64 @@
-# IR-001 — Suspicious Authentication
+# IR-001 — Authentification suspecte
 
-## Statut
+Ce fichier documente le scénario d'analyse prévu pour le Day 10. Le scénario n'a pas été exécuté jusqu'au bout, car `W11-01` n'a pas réussi à envoyer ses événements vers `WAZUH01`.
 
-**Scénario documenté, non exécuté complètement.**
+Je garde donc ici uniquement ce qui est vérifié et la méthode que j'aurais utilisée pour l'analyse. Aucun événement ou horaire n'a été inventé.
 
-Le serveur Wazuh a été installé et son dashboard est accessible. La connexion de `W11-01` comme agent Wazuh n'a pas été finalisée, donc aucun événement Windows ou Sysmon n'est présenté ici comme ayant été centralisé dans Wazuh.
+## Contexte
 
-## Executive Summary
+Le scénario devait contenir plusieurs échecs de connexion, une connexion réussie, la création d'un compte local de test, puis de l'activité processus/réseau/fichier.
 
-Ce scénario avait pour but d'analyser une suite d'événements simples sur un poste Windows : plusieurs échecs de connexion, une connexion réussie, la création d'un compte local, le lancement d'un processus et une connexion réseau.
-
-Le scénario reste volontairement bénin. Aucun malware n'a été utilisé.
-
-Comme la collecte de `W11-01` dans Wazuh n'a pas été validée, le rapport décrit la méthode d'analyse prévue sans inventer de timeline ou de preuves.
-
-## Timeline
-
-Aucune timeline réelle n'est publiée pour ce scénario.
-
-La séquence qui devait être analysée était :
-
-| Ordre | Événement | Source prévue |
-|---|---|---|
-| 1 | échec d'ouverture de session | Windows Event `4625` |
-| 2 | échec d'ouverture de session | Windows Event `4625` |
-| 3 | ouverture de session réussie | Windows Event `4624` |
-| 4 | création d'un compte local de test | Windows Event `4720` |
-| 5 | création d'un processus | Sysmon Event `1` |
+| Ordre prévu | Événement | Source |
+|---:|---|---|
+| 1 | échec de connexion | Windows Event `4625` |
+| 2 | échec de connexion | Windows Event `4625` |
+| 3 | connexion réussie | Windows Event `4624` |
+| 4 | compte local créé | Windows Event `4720` |
+| 5 | processus créé | Sysmon Event `1` |
 | 6 | connexion réseau | Sysmon Event `3` |
-| 7 | création d'un fichier | Sysmon Event `11` |
+| 7 | fichier créé | Sysmon Event `11` |
 
-Ces lignes représentent le scénario prévu, pas des événements observés dans Wazuh.
+Cette table représente le scénario prévu, pas une timeline observée dans Wazuh.
 
-## Affected Asset
+## Systèmes concernés
 
 | Élément | Valeur |
 |---|---|
-| Poste | `W11-01` |
-| Réseau | USERS |
-| Adresse observée pendant le dépannage | `10.10.10.50` |
-| Serveur de supervision | `WAZUH01` |
+| Endpoint | `W11-01` |
+| Réseau endpoint | USERS |
+| Adresse utilisée pendant les tests | `10.10.10.50` |
+| Serveur Wazuh | `WAZUH01` |
 | Adresse Wazuh | `10.10.40.10` |
 
-## Evidence
+## Ce que j'ai pu confirmer
 
-Les preuves réelles disponibles pour le Day 10 sont les suivantes :
+- Wazuh est installé sur `WAZUH01`
+- le dashboard est accessible depuis le poste hôte
+- `WAZUH01` rejoint sa passerelle `10.10.40.1`
+- le test TCP de `W11-01` vers `10.10.40.10:1514` échoue
+- la communication USERS → SECURITY reste à corriger
 
-- Wazuh installé sur `WAZUH01`
-- dashboard Wazuh accessible depuis le poste hôte
-- passerelle SECURITY `10.10.40.1` joignable depuis `WAZUH01`
-- test TCP `W11-01` vers `10.10.40.10:1514` en échec
-- problème de communication entre les réseaux USERS et SECURITY documenté séparément
+Je n'ai pas ajouté de captures Sysmon ou Windows Security puisque je n'ai pas obtenu ces preuves correctement.
 
-Aucune capture `day10-security-events.png` ou `day10-sysmon-events.png` n'est incluse, car ces preuves n'ont pas été obtenues correctement.
+## Comment j'aurais analysé la séquence
 
-## Analysis
+Une série d'échecs de connexion n'est pas suffisante à elle seule pour parler d'incident. Ce qui devient intéressant, c'est le contexte : est-ce qu'une connexion finit par réussir? Est-ce qu'un nouveau compte est créé juste après? Est-ce qu'un processus ou une connexion réseau inhabituelle suit?
 
-Dans un environnement réel, plusieurs échecs de connexion suivis d'une connexion réussie et de la création d'un nouveau compte peuvent justifier une investigation.
+Les questions principales auraient été : quel compte, quelle machine, quelle source, quelle heure, quelles actions avant/après et est-ce que l'activité était autorisée?
 
-L'analyse devrait répondre à ces questions :
+## Actions possibles si le scénario était réel
 
-- quel compte est concerné ?
-- quelle machine a généré les événements ?
-- quelle est la source des tentatives ?
-- une connexion a-t-elle finalement réussi ?
-- qu'est-ce qui s'est produit après la connexion ?
-- la création du compte était-elle autorisée ?
-- des processus ou connexions réseau inhabituels sont-ils apparus ?
+Si cette séquence apparaissait sans raison dans un environnement réel, je commencerais par vérifier le compte créé, les connexions réussies/échouées, les processus lancés ensuite et les connexions réseau associées. Si les indices devenaient sérieux, j'isolerais le poste, je préserverais les logs et je désactiverais un compte non autorisé avant de poursuivre l'analyse.
 
-Dans ce lab, ces questions ont été étudiées comme méthode de travail. Elles ne sont pas présentées comme des conclusions issues de Wazuh.
+## MITRE ATT&CK
 
-## Scope
+- `T1136.001 — Create Account: Local Account`
+- `T1078 — Valid Accounts`
 
-Le scénario était limité à `W11-01` dans le laboratoire `corp.rktlab.test`.
+Ces références servent à classer un comportement. Elles ne prouvent pas qu'une action est malveillante sans le contexte autour.
 
-Aucune autre machine n'est considérée comme touchée dans ce rapport.
+## Limite du lab
 
-## Containment Recommendation
+La chaîne `W11-01` → Wazuh Agent → `WAZUH01` n'a pas été validée. Le rapport est donc un exercice d'analyse documenté, pas un rapport basé sur une collecte Wazuh complète.
 
-Si une séquence similaire était inattendue dans un vrai environnement, les premières actions seraient :
-
-- vérifier si le compte créé est autorisé
-- désactiver un compte non autorisé
-- examiner les connexions réussies et échouées
-- vérifier les processus lancés après la connexion
-- vérifier les connexions réseau associées
-- isoler le poste si des signes de compromission apparaissent
-- conserver les journaux utiles avant de faire des changements importants
-
-## Recovery
-
-Après validation de l'incident, il faudrait :
-
-- supprimer les comptes de test ou non autorisés
-- rétablir les accès nécessaires
-- vérifier que le poste fonctionne normalement
-- confirmer que la supervision est de nouveau disponible
-- documenter les actions réalisées
-
-## MITRE Mapping
-
-### T1136.001 — Create Account: Local Account
-
-Cette technique correspond à la création d'un compte local. Dans un vrai incident, un attaquant pourrait utiliser cette méthode pour conserver un accès.
-
-### T1078 — Valid Accounts
-
-Cette technique concerne l'utilisation de comptes valides. Une connexion réussie après plusieurs échecs peut devenir intéressante lorsqu'elle est liée à d'autres événements.
-
-Ces références servent à comprendre le scénario. Elles ne prouvent pas à elles seules qu'une activité est malveillante.
-
-## Lessons Learned
-
-- une installation Wazuh fonctionnelle ne garantit pas que tous les endpoints peuvent joindre le manager
-- il faut séparer les problèmes réseau des problèmes d'application
-- une timeline doit être basée sur des événements réellement observés
-- plusieurs événements simples peuvent devenir importants lorsqu'ils sont liés entre eux
-- il vaut mieux documenter une limite que publier une preuve inventée
-
-## Lab Limitation
-
-La partie `W11-01` → Wazuh Agent → `WAZUH01` n'a pas été validée pendant le Day 10.
-
-Les captures Sysmon et Windows Security prévues n'ont pas été obtenues correctement et sont volontairement absentes du dépôt.
-
-Ce rapport est donc un scénario d'analyse documenté et non un rapport basé sur une collecte Wazuh complète.
+Le point positif de ce Day est surtout la méthode : ne pas confondre installation du serveur, connectivité réseau et collecte réelle des événements.
