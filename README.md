@@ -73,6 +73,14 @@ WAZUH01 est installé et le dashboard fonctionne. La connexion de W11-01 comme a
 
 Le problème reste documenté dans le Day 11 comme incident escaladé au lieu d'être présenté comme résolu.
 
+## Travaux académiques
+
+J'ai aussi regroupé mes rapports de cours par domaine : Windows Server, réseaux Cisco, Linux, cybersécurité, supervision réseau, PowerShell, Python et MariaDB.
+
+Les travaux faits en équipe sont identifiés dans l'index.
+
+[Voir les travaux académiques et les compétences couvertes](academic-work/README.md)
+
 ## À voir en priorité
 
 - [Architecture réseau](diagrams/architecture-v2-segmented.png)
@@ -81,6 +89,7 @@ Le problème reste documenté dans le Day 11 comme incident escaladé au lieu d'
 - [Day 07 — Windows, Sysinternals et support TI](docs/day07-windows-endpoint-sysinternals.md)
 - [Day 10 — Dépannage Wazuh](troubleshooting/day10-wazuh-connectivity.md)
 - [Day 11 — Opérations TI](docs/day11-enterprise-operations.md)
+- [Travaux académiques](academic-work/README.md)
 - [Journal d'incidents Day 11](operations/tickets/day11-incident-log.md)
 
 ## Limites
