@@ -1,52 +1,33 @@
 # TICKET-XXX — Titre du problème
 
-## Informations
-
-- ID : TICKET-XXX
 - Date : AAAA-MM-JJ
-- Rapporté par : nom de l'utilisateur
-- Catégorie : Réseau / Active Directory / Poste client / Application / Périphérique / Sécurité
-- Statut : Ouvert / En cours / Résolu / Fermé
-
-## Priorité
-
-- Impact : élevé / moyen / faible
-- Urgence : élevée / moyenne / faible
+- Utilisateur / machine :
+- Catégorie :
 - Priorité : P1 / P2 / P3 / P4
-- Utilisateurs touchés : X
-- SLA : délai applicable
+- Statut : ouvert / en cours / résolu / escaladé
 
-## Symptôme
+## Problème
 
-Décrire ce que l'utilisateur voit.
+Ce que l'utilisateur voit.
 
-## Preuves
+## Vérifications
 
-- message d'erreur
-- capture d'écran
-- logs
-- commandes utiles
-
-## Diagnostic
-
-Lister les vérifications dans l'ordre.
+- test 1
+- test 2
+- preuve utile
 
 ## Cause
 
-Indiquer la cause confirmée.
+Cause confirmée.
 
-## Résolution
+## Correction
 
-Indiquer la correction appliquée.
+Action faite.
 
 ## Validation
 
-Indiquer comment le fonctionnement a été confirmé.
+Test final.
 
 ## Escalade
 
-Indiquer si une escalade a été nécessaire.
-
-## Fermeture
-
-Résumer la cause, la correction et le résultat.
+À remplir seulement si nécessaire.

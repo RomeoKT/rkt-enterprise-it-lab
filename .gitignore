@@ -1,4 +1,4 @@
-# VMware / machines virtuelles
+# VMware
 *.vmdk
 *.vmem
 *.vmss
@@ -8,19 +8,21 @@
 *.vmxf
 *.lck
 
-# Images et exports de machines virtuelles
+# Images VM
 *.iso
 *.img
 *.ova
 *.ovf
 
-# Journaux et fichiers temporaires
+# Temporaires
 *.log
 *.tmp
 *.bkp
+*.dtmp
 ~$*
+.$*
 
-# Secrets et identifiants
+# Secrets
 .env
 *.key
 *.pem
@@ -36,7 +38,7 @@ pcaps/
 *.zip
 *.7z
 
-# Fichiers système
+# Système
 .DS_Store
 Thumbs.db
 desktop.ini

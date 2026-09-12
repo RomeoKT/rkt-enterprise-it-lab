@@ -1,61 +1,33 @@
 # Mini revue ITGC
 
-## Gestion des accès
+## Accès
 
-Preuves :
+En place :
 
-- groupes Active Directory utilisés pour les accès
-- modèle AGDLP pour les partages
-- Windows LAPS configuré sur W11-01
+- groupes Active Directory
+- AGDLP pour les partages
+- Windows LAPS sur W11-01
 
-Faiblesse :
+À améliorer : pas de processus d'approbation des accès dans le lab.
 
-Aucun processus formel d'approbation des accès dans le lab.
+## Changements
 
-Amélioration :
+En place : CHG-001 avec test et retour arrière.
 
-Ajouter une demande d'accès simple avec validation avant modification des groupes.
+À améliorer : pas d'approbation ni de fenêtre de maintenance.
 
-## Gestion des changements
+## Logs
 
-Preuve :
+En place :
 
-CHG-001 documente un changement de pare-feu avec validation et retour arrière.
-
-Faiblesse :
-
-Aucune approbation formelle ou fenêtre de maintenance.
-
-Amélioration :
-
-Valider les changements importants avant application.
-
-## Logs et monitoring
-
-Preuves :
-
-- logs pfSense disponibles
+- logs pfSense
 - Wazuh installé
 - dashboard Wazuh accessible
 
-Faiblesse :
+À améliorer : W11-01 n'envoie pas encore ses événements à WAZUH01.
 
-W11-01 n'envoie pas encore ses événements vers WAZUH01.
+## Sauvegarde
 
-Amélioration :
+Aucun test complet de sauvegarde et restauration de DC01 ou FS01 n'a été fait.
 
-Corriger la communication agent-manager et valider la collecte Windows.
-
-## Sauvegarde et récupération
-
-Preuve :
-
-Aucun test complet de sauvegarde et restauration n'a encore été validé dans ce projet.
-
-Faiblesse :
-
-La récupération de DC01 et FS01 n'a pas été testée.
-
-Amélioration :
-
-Préparer une sauvegarde de DC01 et FS01 puis tester une restauration.
+À améliorer : préparer une sauvegarde puis tester une restauration.

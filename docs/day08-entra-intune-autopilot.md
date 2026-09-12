@@ -1,12 +1,8 @@
 # Day 08 — Entra ID, Intune et Autopilot
 
-Étude des bases de la gestion moderne des postes Windows.
-
-Je n'avais pas de tenant Intune complet pour faire un déploiement réel.
+Étude de la gestion moderne des postes Windows. Je n'avais pas de tenant Intune complet pour faire un déploiement.
 
 ## Microsoft Entra ID
-
-Sujets étudiés :
 
 - utilisateurs et groupes
 - rôles
@@ -16,32 +12,28 @@ Sujets étudiés :
 
 ### États d'un appareil
 
-| État | Usage général |
+| État | Usage |
 |---|---|
 | Microsoft Entra registered | appareil personnel / BYOD |
-| Microsoft Entra joined | poste géré principalement dans le cloud |
-| Microsoft Entra hybrid joined | poste lié à AD local et à Entra ID |
+| Microsoft Entra joined | poste géré dans le cloud |
+| Microsoft Entra hybrid joined | poste lié à AD local et Entra ID |
 
 ## Microsoft Intune
 
 - inscription des appareils
 - profils de configuration
 - conformité
-- déploiement d'applications
+- applications
 - mises à jour
 - actions à distance
 - synchronisation
 
 ## Windows Autopilot
 
-J'ai étudié le chemin général : enregistrement de l'appareil, profil Autopilot, premier démarrage, Entra Join, inscription Intune et application des politiques.
+Flux étudié : enregistrement de l'appareil, profil Autopilot, premier démarrage, Entra Join, inscription Intune et application des politiques.
 
 ![Flux Windows Autopilot](../diagrams/autopilot-device-flow.png)
 
-## Dépannage
+Voir [Dépannage Microsoft Intune](../operations/intune-troubleshooting-runbook.md).
 
-Voir [Runbook — Dépannage Microsoft Intune](../operations/intune-troubleshooting-runbook.md).
-
-## Statut
-
-Étude et documentation seulement. Aucun déploiement Intune de production n'est présenté dans ce lab.
+Day 08 : étude seulement.

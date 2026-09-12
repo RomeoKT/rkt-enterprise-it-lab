@@ -1,31 +1,31 @@
-# Runbook — Dépannage Microsoft Intune
+# Dépannage Microsoft Intune
 
-Document du Day 08. Aucun tenant Intune complet n'a été utilisé dans ce lab.
+Day 08 : étude seulement. Je n'avais pas de tenant Intune complet.
 
-## 1. Connexion ou MFA
+## Connexion ou MFA
 
 Vérifier :
 
-- connexion Internet
+- Internet
 - date et heure du téléphone
 - méthodes d'authentification
 - Microsoft Authenticator
 
-## 2. Appareil dans Entra ID mais absent d'Intune
+## Appareil dans Entra ID mais absent d'Intune
 
 Vérifier :
 
-- licence de l'utilisateur
+- licence utilisateur
 - portée MDM
 - restrictions d'inscription
-- état du poste avec dsregcmd /status
-- synchronisation de l'appareil
+- dsregcmd /status
+- dernière synchronisation
 
-Chemin de synchronisation Windows : Paramètres > Comptes > Accès professionnel ou scolaire > Compte de l'organisation > Infos > Synchroniser.
+Sous Windows : Paramètres > Comptes > Accès professionnel ou scolaire > compte de l'organisation > Infos > Synchroniser.
 
 dsregcmd /leave retire l'enregistrement de l'appareil. Ce n'est pas une commande de synchronisation.
 
-## 3. Appareil non conforme
+## Appareil non conforme
 
 Vérifier :
 
@@ -35,15 +35,13 @@ Vérifier :
 - version de Windows
 - dernière synchronisation
 
-## 4. Application gérée absente
+## Application absente
 
 Vérifier :
 
 - assignation
 - groupe ciblé
 - synchronisation
-- résultat d'installation dans Intune ou Company Portal
+- résultat dans Intune ou Company Portal
 
-## Ordre général
-
-Identité → licence → appareil → inscription → assignation → synchronisation → conformité.
+Ordre : identité, licence, appareil, inscription, assignation, synchronisation, conformité.

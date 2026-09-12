@@ -12,16 +12,18 @@ Configuration de FS01, des partages SMB, des groupes AGDLP, des GPO et de Window
 | DNS | 10.10.20.10 |
 | Domaine | corp.rktlab.test |
 
-Partages principaux :
+Partages :
 
 - \\FS01\Finance
 - \\FS01\HR
 - \\FS01\IT
 - \\FS01\Public
 
+![Partages FS01](../screenshots/day05-fs01-shares.png)
+
 ## AGDLP
 
-Modèle utilisé : Account → Global Group → Domain Local Group → Permission.
+Account → Global Group → Domain Local Group → Permission.
 
 Exemple Finance : Sarah Tremblay → GG_FINANCE_USERS → DL_FINANCE_RW → \\FS01\Finance.
 
@@ -35,7 +37,7 @@ Exemple Finance : Sarah Tremblay → GG_FINANCE_USERS → DL_FINANCE_RW → \\FS
 - GPO-Account-Lockout
 - GPO-Windows-Firewall
 
-Commandes de validation :
+Commandes utilisées :
 
 - gpupdate /force
 - gpresult /r
@@ -49,10 +51,10 @@ Les permissions de partage contrôlent l'accès SMB. Les permissions NTFS contr�
 
 ## Windows LAPS
 
-Windows LAPS a été configuré sur W11-01. Aucun mot de passe LAPS n'est stocké dans le dépôt.
+Windows LAPS configuré sur W11-01.
 
-## Break/fix
+## Dépannage
 
-J'ai testé quatre problèmes : mauvaise OU, groupe manquant, permissions NTFS incorrectes et lecteur réseau absent.
+Tests faits avec une mauvaise OU, un groupe manquant, des permissions NTFS incorrectes et un lecteur réseau absent.
 
 Voir [Day 05 — Dépannage Active Directory](../troubleshooting/day05-ad-break-fix.md).

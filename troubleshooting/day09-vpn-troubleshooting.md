@@ -1,23 +1,21 @@
 # Day 09 — Dépannage VPN IPsec
 
-Méthode de vérification pour un VPN Site-to-Site.
+Checklist étudiée pour un VPN Site-to-Site.
 
-Aucun tunnel FortiGate de production n'a été administré dans ce lab.
-
-## Ordre de vérification
+## Vérifications
 
 1. Réseau local
-   - adresse IP
+   - IP
    - masque
    - passerelle
    - accès au pare-feu
 
-2. WAN et pair distant
-   - connectivité Internet
-   - bonne adresse du pair
+2. WAN
+   - Internet
+   - adresse du pair distant
 
 3. IKE
-   - version IKE
+   - version
    - authentification
    - clé ou certificat
    - chiffrement
@@ -34,28 +32,25 @@ Aucun tunnel FortiGate de production n'a été administré dans ce lab.
    - route vers le réseau distant
 
 6. Pare-feu
-   - service réellement utilisé
-   - DNS 53, HTTPS 443, SMB 445, RDP 3389 selon le besoin
+   - service et port utilisés
 
 7. NAT
-   - vérifier qu'il ne modifie pas le trafic VPN par erreur
+   - vérifier qu'il ne modifie pas le trafic VPN
 
 8. Logs
-   - échec IKE
+   - IKE
    - authentification
    - paramètres incompatibles
-   - mauvais sélecteur
-   - règle bloquante
+   - sélecteurs
+   - règles bloquantes
 
-9. Trafic de retour
-   - vérifier les deux sens
+9. Retour
+   - vérifier le trafic dans les deux sens
 
-## Ports à connaître
+## Ports
 
 - UDP 500 : IKE
-- UDP 4500 : NAT Traversal
+- UDP 4500 : NAT-T
 - IP 50 : ESP
 
-## Validation
-
-Le tunnel doit être établi et le service demandé doit fonctionner dans les deux sens.
+Validation : tunnel établi et service demandé fonctionnel dans les deux sens.

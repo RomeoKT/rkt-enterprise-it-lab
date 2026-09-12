@@ -1,6 +1,6 @@
 # Day 02 — TCP/IP et Wireshark
 
-Validation des bases réseau avant d'ajouter Active Directory.
+Validation des bases réseau avant Active Directory.
 
 ## Configuration de test
 
@@ -14,7 +14,7 @@ Validation des bases réseau avant d'ajouter Active Directory.
 
 À partir du Day 04, les postes du domaine utilisent DC01, 10.10.20.10, comme DNS principal.
 
-## Tests utilisés
+## Tests
 
 - ipconfig /all
 - ping 10.10.10.1
@@ -27,7 +27,7 @@ Validation des bases réseau avant d'ajouter Active Directory.
 
 ### ICMP
 
-Capture d'un ping pour voir les Echo Request et Echo Reply.
+Capture d'un ping avec Echo Request et Echo Reply.
 
 ![Capture ICMP](../screenshots/day02-icmp.png)
 
@@ -39,12 +39,12 @@ Capture d'une résolution de nom.
 
 ### TCP
 
-Capture du three-way handshake : SYN → SYN-ACK → ACK.
+Capture du three-way handshake : SYN, SYN-ACK, ACK.
 
 ![Capture TCP](../screenshots/day02-tcp-handshake.png)
 
-## Break/fix
+## Dépannage
 
-J'ai reproduit cinq problèmes : mauvaise passerelle, mauvais masque, mauvais DNS, adresse IP dupliquée et carte réseau désactivée.
+Tests faits avec une mauvaise passerelle, un mauvais masque, un mauvais DNS, une IP dupliquée et une carte réseau désactivée.
 
 Voir [Day 02 — Dépannage réseau](../troubleshooting/day02-break-fix.md).

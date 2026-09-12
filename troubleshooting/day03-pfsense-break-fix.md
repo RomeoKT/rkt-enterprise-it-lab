@@ -1,6 +1,6 @@
 # Day 03 — Dépannage pfSense
 
-Quatre problèmes ont été reproduits autour de pfSense.
+Quatre problèmes testés autour de pfSense.
 
 | Problème | Symptôme | Cause | Correction |
 |---|---|---|---|
@@ -9,18 +9,16 @@ Quatre problèmes ont été reproduits autour de pfSense.
 | NAT sortant | passerelle OK, Internet KO | NAT désactivé | remettre le NAT automatique |
 | Passerelle | réseau local OK, réseaux distants KO | mauvaise passerelle | remettre 10.10.10.1 |
 
-## Vérifications utiles
+## Vérifications
 
 - nslookup google.com
 - logs pfSense
-- règles de l'interface USERS
-- configuration NAT
+- règles USERS
+- NAT
 - passerelle du poste
 
-![Journaux pfSense](../screenshots/day03-firewall-log.png)
+![Logs pfSense](../screenshots/day03-firewall-log.png)
 
-Après le Day 04, les postes du domaine utilisent DC01, 10.10.20.10, comme DNS principal.
+Après le Day 04, le DNS principal est DC01, 10.10.20.10.
 
-## Ordre de vérification
-
-Configuration locale → passerelle → DNS → routage → pare-feu → NAT → logs.
+Ordre : poste, passerelle, DNS, routage, pare-feu, NAT, logs.

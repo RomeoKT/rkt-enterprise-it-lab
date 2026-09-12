@@ -1,73 +1,47 @@
 # Day 11 — Opérations TI
 
-Le Day 11 regroupe une file de 12 incidents simulés pour pratiquer la priorisation, le dépannage, l'escalade et la documentation.
+12 incidents simulés dans Jira pour pratiquer la priorisation, le dépannage et l'escalade.
 
-## Queue d'incidents
+## Incidents
 
-| ID | Incident | Catégorie | Traitement |
+| ID | Incident | Catégorie | État |
 |---|---|---|---|
 | INC-101 | Internet unavailable | Réseau | traité |
 | INC-102 | DNS failure | Réseau | traité |
 | INC-103 | Firewall block | Réseau | traité |
 | INC-104 | Account locked | Active Directory | traité |
-| INC-105 | Domain join failure | Active Directory | queue |
-| INC-106 | GPO not applied | Active Directory | queue |
-| INC-107 | Slow workstation | Endpoint | queue |
-| INC-108 | Printer unavailable | Endpoint | queue |
-| INC-109 | Windows service stopped | Endpoint | queue |
+| INC-105 | Domain join failure | Active Directory | en attente |
+| INC-106 | GPO not applied | Active Directory | en attente |
+| INC-107 | Slow workstation | Endpoint | en attente |
+| INC-108 | Printer unavailable | Endpoint | en attente |
+| INC-109 | Windows service stopped | Endpoint | en attente |
 | INC-110 | Finance share denied | Permissions | traité |
-| INC-111 | Multiple failed logins | Sécurité | escalade |
-| INC-112 | Wazuh agent disconnected | Sécurité | escalade |
+| INC-111 | Multiple failed logins | Sécurité | escaladé |
+| INC-112 | Wazuh agent disconnected | Sécurité | escaladé |
 
-La priorité est basée sur l'impact, l'urgence et le service touché.
+Priorité basée sur l'impact, l'urgence et le service touché.
 
-Le détail des 12 incidents est dans [le journal du Day 11](../operations/tickets/day11-incident-log.md).
+![File de tickets Day 11](../screenshots/day11-ticket-queue.png)
 
-## Méthode
+Le détail est dans [le journal d'incidents](../operations/tickets/day11-incident-log.md).
 
-Pour les tickets traités, je garde le même ordre :
+## Tickets traités
 
-- scope
-- preuve
-- hypothèse
-- test
-- cause
-- correction
-- validation
-- documentation
-
-## Cinq traitements documentés
-
-INC-101 : carte réseau et passerelle de W11-01.
-
-INC-102 : connectivité IP et DNS interne sur DC01.
-
-INC-103 : blocage SMB vers FS01 et validation du port TCP 445 après correction.
-
-INC-104 : verrouillage d'un compte Active Directory de test et déverrouillage.
-
-INC-110 : accès Finance et appartenance au groupe GG_FINANCE_USERS.
+- INC-101 : carte réseau et passerelle de W11-01
+- INC-102 : DNS interne sur DC01
+- INC-103 : SMB vers FS01, port TCP 445
+- INC-104 : compte AD verrouillé puis déverrouillé
+- INC-110 : accès Finance et groupe GG_FINANCE_USERS
 
 ## Escalades
 
-INC-111 est escaladé vers la sécurité. Plusieurs échecs de connexion demandent une vérification des journaux et du compte avant de conclure à un incident.
+- INC-111 : sécurité, pour vérifier les échecs de connexion et le compte concerné
+- INC-112 : réseau / sécurité, pour reprendre la connexion W11-01 vers WAZUH01:1514
 
-INC-112 est escaladé vers réseau / sécurité. Le Day 10 a montré que W11-01 ne valide pas encore la connexion TCP vers WAZUH01 sur le port 1514.
+## Changement
 
-## Change Management
+[CHG-001 — Règle Wazuh](../operations/changes/CHG-001-New-Firewall-Rule.md)
 
-Le changement lié aux règles Wazuh est documenté ici : [CHG-001 — Règle Wazuh](../operations/changes/CHG-001-New-Firewall-Rule.md).
+## ITGC
 
-Le changement reste en attente de validation tant que la communication Wazuh n'est pas confirmée.
-
-## Mini revue ITGC
-
-La revue couvre quatre points : gestion des accès, gestion des changements, logs et monitoring, sauvegarde et récupération.
-
-Voir [ITGC Mini Review](../operations/audit/ITGC-mini-review.md).
-
-## État
-
-Le Day 11 est terminé dans le dépôt avec la queue d'incidents, les traitements documentés, les deux escalades, le change request et la mini revue ITGC.
-
-Les incidents sont des scénarios de lab. Le problème Wazuh reste volontairement indiqué comme non résolu au lieu d'inventer une validation.
+[Mini revue ITGC](../operations/audit/ITGC-mini-review.md)

@@ -1,6 +1,6 @@
 # Day 10 — Wazuh, Sysmon et réponse aux incidents
 
-Wazuh a été installé sur WAZUH01. Le dashboard fonctionne, mais la connexion de W11-01 comme agent n'a pas été finalisée.
+Wazuh est installé sur WAZUH01. Le dashboard fonctionne. La connexion de W11-01 comme agent n'a pas été terminée.
 
 ## WAZUH01
 
@@ -13,13 +13,15 @@ Wazuh a été installé sur WAZUH01. Le dashboard fonctionne, mais la connexion 
 | Wazuh Server / Indexer / Dashboard | installés |
 | Dashboard | accessible |
 
-## Problème rencontré
+![Dashboard Wazuh](../screenshots/day10-wazuh-dashboard.png)
+
+## Problème
 
 W11-01 est sur USERS et WAZUH01 sur SECURITY.
 
-Le test TCP vers 10.10.40.10 sur le port 1514 échouait. La communication agent-manager n'a donc pas été validée.
+Le test TCP vers 10.10.40.10:1514 échouait. La communication agent-manager n'a pas été validée.
 
-Voir [Day 10 — Dépannage de la connexion Wazuh](../troubleshooting/day10-wazuh-connectivity.md).
+Voir [Dépannage de la connexion Wazuh](../troubleshooting/day10-wazuh-connectivity.md).
 
 ## Événements étudiés
 
@@ -32,19 +34,17 @@ Voir [Day 10 — Dépannage de la connexion Wazuh](../troubleshooting/day10-wazu
 | Windows Security | 4625 | ouverture de session échouée |
 | Windows Security | 4720 | création d'un compte utilisateur |
 
-La collecte de ces événements dans Wazuh n'est pas présentée comme réussie.
+Je n'ai pas validé la collecte de ces événements dans Wazuh.
 
 ## Réponse aux incidents
 
-J'ai travaillé une méthode simple : identifier la machine et le compte, mettre les événements dans l'ordre, vérifier ce qui se passe avant et après, puis documenter les actions possibles.
+Méthode utilisée : identifier la machine et le compte, remettre les événements dans l'ordre, vérifier ce qui se passe avant et après, puis noter les actions à prendre.
 
-Références MITRE ATT&CK étudiées :
+MITRE ATT&CK vus :
 
 - T1136.001 — Create Account: Local Account
 - T1078 — Valid Accounts
 
 Voir [IR-001 — Authentification suspecte](../operations/incidents/IR-001-Suspicious-Authentication.md).
 
-## Statut
-
-Serveur Wazuh installé. Agent Windows à reprendre.
+Serveur Wazuh : OK. Agent Windows : à reprendre.

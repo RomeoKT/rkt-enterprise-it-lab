@@ -1,59 +1,44 @@
-# CHG-001 — Règle Wazuh
+# CHG-001 — Accès Wazuh
 
 ## Raison
 
-Permettre à W11-01 de communiquer avec WAZUH01 pour l'agent Wazuh.
+Permettre à W11-01 de joindre WAZUH01 pour l'agent Wazuh.
 
-## État actuel
+## Changement
 
-W11-01 est sur le réseau USERS.
+Sur pfSense, ajouter deux règles limitées à :
 
-WAZUH01 est sur le réseau SECURITY à l'adresse 10.10.40.10.
-
-La connexion TCP vers le port 1514 n'a pas été validée pendant le Day 10.
-
-## Changement prévu
-
-Ajouter des règles pfSense limitées au trafic Wazuh.
-
-Source : W11-01
-
-Destination : 10.10.40.10
-
-Ports : TCP 1514 et TCP 1515
-
-Logs : activés
+- source : W11-01
+- destination : 10.10.40.10
+- TCP 1514
+- TCP 1515
+- logs activés
 
 ## Risque
 
-Une règle trop large donnerait aux postes USERS un accès inutile au réseau SECURITY.
+Une règle trop large ouvrirait un accès inutile entre USERS et SECURITY.
 
-## Mise en place
+## Étapes
 
-1. Ouvrir pfSense.
-2. Aller dans Firewall > Rules > USERS.
-3. Ajouter une règle TCP vers 10.10.40.10 pour le port 1514.
-4. Ajouter une règle TCP vers 10.10.40.10 pour le port 1515.
-5. Activer les logs sur les deux règles.
-6. Appliquer les changements.
+1. Firewall > Rules > USERS
+2. Ajouter TCP 1514 vers 10.10.40.10
+3. Ajouter TCP 1515 vers 10.10.40.10
+4. Activer les logs
+5. Appliquer les règles
 
-## Validation
+## Test
 
-Depuis W11-01, tester :
+Depuis W11-01 :
 
 - Test-NetConnection 10.10.40.10 -Port 1514
 - Test-NetConnection 10.10.40.10 -Port 1515
 
-Le changement est validé seulement si les connexions attendues fonctionnent.
-
 ## Retour arrière
 
-Désactiver ou supprimer les deux nouvelles règles pfSense, puis appliquer la configuration.
+Supprimer ou désactiver les deux règles puis appliquer la configuration.
 
-## Preuve liée
-
-Voir [Day 10 — Dépannage Wazuh](../../troubleshooting/day10-wazuh-connectivity.md).
+Voir [le dépannage du Day 10](../../troubleshooting/day10-wazuh-connectivity.md).
 
 ## État
 
-En attente de validation.
+À valider.

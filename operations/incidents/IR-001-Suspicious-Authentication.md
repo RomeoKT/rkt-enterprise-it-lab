@@ -1,60 +1,50 @@
 # IR-001 — Authentification suspecte
 
-Scénario prévu pour le Day 10. Il n'a pas été exécuté jusqu'au bout parce que W11-01 n'a pas réussi à envoyer ses événements vers WAZUH01.
-
-Aucun événement ou horaire n'a été inventé.
+Scénario du Day 10. Il n'a pas été terminé parce que W11-01 n'envoyait pas ses événements à WAZUH01.
 
 ## Séquence prévue
 
 | Ordre | Événement | Source |
 |---:|---|---|
-| 1 | échec de connexion | Windows Event 4625 |
-| 2 | échec de connexion | Windows Event 4625 |
-| 3 | connexion réussie | Windows Event 4624 |
-| 4 | compte local créé | Windows Event 4720 |
-| 5 | processus créé | Sysmon Event 1 |
-| 6 | connexion réseau | Sysmon Event 3 |
-| 7 | fichier créé | Sysmon Event 11 |
-
-Cette table décrit le scénario prévu, pas une timeline observée dans Wazuh.
+| 1 | échec de connexion | Windows 4625 |
+| 2 | échec de connexion | Windows 4625 |
+| 3 | connexion réussie | Windows 4624 |
+| 4 | compte local créé | Windows 4720 |
+| 5 | processus créé | Sysmon 1 |
+| 6 | connexion réseau | Sysmon 3 |
+| 7 | fichier créé | Sysmon 11 |
 
 ## Systèmes
 
 | Élément | Valeur |
 |---|---|
-| Endpoint | W11-01 |
-| Réseau endpoint | USERS |
-| Adresse utilisée pendant les tests | 10.10.10.50 |
+| Poste | W11-01 |
+| Réseau | USERS |
+| Adresse pendant les tests | 10.10.10.50 |
 | Serveur Wazuh | WAZUH01 |
 | Adresse Wazuh | 10.10.40.10 |
 
 ## Faits confirmés
 
 - Wazuh installé sur WAZUH01
-- dashboard accessible depuis le poste hôte
+- dashboard accessible
 - passerelle 10.10.40.1 joignable depuis WAZUH01
-- test TCP de W11-01 vers 10.10.40.10:1514 en échec
-- communication USERS vers SECURITY à corriger
+- TCP 1514 de W11-01 vers WAZUH01 en échec
 
-## Analyse prévue
+## Vérifications prévues
 
-Questions principales :
+- compte concerné
+- machine concernée
+- source des événements
+- ordre des connexions
+- processus lancés ensuite
+- connexions réseau
 
-- quel compte est concerné ?
-- quelle machine ?
-- quelle source ?
-- une connexion a-t-elle réussi ?
-- qu'est-ce qui s'est passé ensuite ?
-- la création du compte était-elle autorisée ?
-
-## Actions possibles
-
-Si cette séquence apparaissait sans raison dans un vrai environnement :
+## Si l'activité est suspecte
 
 - vérifier le compte créé
 - vérifier les connexions réussies et échouées
-- regarder les processus lancés ensuite
-- vérifier les connexions réseau
+- vérifier les processus et connexions réseau
 - isoler le poste si nécessaire
 - conserver les logs
 - désactiver un compte non autorisé
@@ -64,6 +54,4 @@ Si cette séquence apparaissait sans raison dans un vrai environnement :
 - T1136.001 — Create Account: Local Account
 - T1078 — Valid Accounts
 
-## Limite
-
-La chaîne W11-01 → Wazuh Agent → WAZUH01 n'a pas été validée. Ce fichier reste donc un scénario d'analyse documenté.
+Collecte Wazuh sur W11-01 : non validée.
