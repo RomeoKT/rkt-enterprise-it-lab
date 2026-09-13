@@ -13,13 +13,13 @@
 | Linux et VPN | [Day 09](day09-fortinet-linux-vpn.md) |
 | Wazuh | [Day 10](day10-wazuh-sysmon-incident-response.md) |
 | Réponse aux incidents | [IR-001](../operations/incidents/IR-001-Suspicious-Authentication.md) |
-| Change management | [CHG-001](../operations/changes/CHG-001-New-Firewall-Rule.md) |
+| Gestion des changements | [CHG-001](../operations/changes/CHG-001-New-Firewall-Rule.md) |
 | ITGC | [Mini revue ITGC](../operations/audit/ITGC-mini-review.md) |
-| Cisco, VLAN, HSRP et NAT | [Travaux réseau](../academic-work/README.md#réseaux-cisco-et-infrastructure) |
-| Services Linux | [Travaux Linux](../academic-work/README.md#linux-services-et-virtualisation) |
-| Cybersécurité | [Travaux cybersécurité](../academic-work/README.md#cybersécurité) |
-| SNMP | [Travail de supervision](../academic-work/README.md#supervision-réseau) |
-| Python et MariaDB | [Travaux programmation et bases de données](../academic-work/README.md#programmation-et-bases-de-données) |
+| Cisco, VLAN, HSRP et NAT | [Travaux réseau](../academic-work/README.md) |
+| Services Linux | [Travaux Linux](../academic-work/README.md) |
+| Cybersécurité | [Travaux cybersécurité](../academic-work/README.md) |
+| SNMP | [TP SNMP et MIB](../academic-work/monitoring/420-5F4-tp01-snmp-mib-monitoring.pdf) |
+| Python et MariaDB | [Travail Python/MariaDB](../academic-work/programming-databases/420-4H4-travail02-python-mariadb.pdf) |
 
 ## À noter
 

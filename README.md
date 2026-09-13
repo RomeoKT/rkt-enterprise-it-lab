@@ -6,7 +6,7 @@ Le lab couvre le réseau, Windows Server, Active Directory, PowerShell, le suppo
 
 ## Architecture
 
-![Architecture du lab](diagrams/architecture-v3-final.svg)
+![Architecture du lab](diagrams/architecture-v3-final.png)
 
 ### Réseaux
 
@@ -45,7 +45,7 @@ Les réseaux sont en VMware host-only. pfSense gère le routage, le pare-feu et 
 | [Day 08](docs/day08-entra-intune-autopilot.md) | Entra ID, Intune et Autopilot | étude |
 | [Day 09](docs/day09-fortinet-linux-vpn.md) | Fortinet, Linux et VPN | étude + pratique Linux |
 | [Day 10](docs/day10-wazuh-sysmon-incident-response.md) | Wazuh, Sysmon et réponse aux incidents | partiel |
-| [Day 11](docs/day11-enterprise-operations.md) | tickets, escalade, change management et ITGC | fait |
+| [Day 11](docs/day11-enterprise-operations.md) | tickets, escalade, gestion des changements et ITGC | fait |
 
 ## Ce que j'ai fait
 
@@ -77,14 +77,13 @@ Mes rapports de cours sont classés par domaine et reliés aux compétences util
 
 ## Fichiers principaux
 
-- [Architecture finale](diagrams/architecture-v3-final.svg)
+- [Architecture finale](diagrams/architecture-v3-final.png)
 - [Compétences et preuves](docs/job-requirements-evidence.md)
 - [Day 05 — GPO, services de fichiers et permissions](docs/day05-ad-gpo-file-services.md)
 - [Test-RKTNetwork.ps1](scripts/Test-RKTNetwork.ps1)
 - [Day 07 — Windows, Sysinternals et support TI](docs/day07-windows-endpoint-sysinternals.md)
 - [Day 10 — Dépannage Wazuh](troubleshooting/day10-wazuh-connectivity.md)
 - [Day 11 — Opérations TI](docs/day11-enterprise-operations.md)
-- [Travaux académiques](academic-work/README.md)
 
 ## À noter
 
