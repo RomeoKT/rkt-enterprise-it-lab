@@ -22,12 +22,10 @@ Les ressources CPU, RAM et disque ont été ajustées selon le rôle de chaque V
 | MGMT | 10.10.30.0/24 |
 | SECURITY | 10.10.40.0/24 |
 
-Les réseaux internes sont en host-only. La sortie Internet passe ensuite par pfSense.
+Les réseaux internes sont en host-only. La sortie Internet passe par pfSense.
 
 ## Architecture de départ
 
 ![Première version de l'architecture](../diagrams/architecture-v1.png)
-
-## Résultat
 
 La base VMware est prête pour pfSense, Windows Server et les postes clients.

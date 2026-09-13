@@ -8,7 +8,7 @@ param(
 )
 
 $Directory = Split-Path $OutputPath -Parent
-if (-not (Test-Path $Directory)) {
+if ($Directory -and -not (Test-Path $Directory)) {
     New-Item -ItemType Directory -Path $Directory -Force | Out-Null
 }
 

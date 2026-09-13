@@ -26,7 +26,7 @@ Domaine : corp.rktlab.test
 - Admins
 - Disabled-Accounts
 
-Les OU de départements sont utilisées par les scripts PowerShell. Les OU de sites servent aussi au ciblage de certaines GPO.
+Les OU de départements sont utilisées par les scripts PowerShell. Les OU de sites servent au ciblage de certaines GPO.
 
 ## Vérifications
 
@@ -40,7 +40,5 @@ Les OU de départements sont utilisées par les scripts PowerShell. Les OU de si
 ![DNS Manager](../screenshots/day04-dns-manager.png)
 
 ![W11-01 joint au domaine](../screenshots/day04-w11-domain-membership.png)
-
-## Résultat
 
 W11-01 est joint à corp.rktlab.test et utilise DC01 pour le DNS interne.

@@ -1,6 +1,4 @@
-# KB-003 — Diagnostiquer une imprimante réseau
-
-## Symptôme
+# KB-003 — Imprimante réseau
 
 L'imprimante apparaît hors ligne ou les travaux ne s'impriment pas.
 
@@ -15,11 +13,7 @@ L'imprimante apparaît hors ligne ou les travaux ne s'impriment pas.
 7. vérifier le service avec Get-Service Spooler
 8. vérifier que le port correspond à la bonne adresse IP
 
-## Validation
+## Test final
 
 - imprimante en ligne
 - page de test imprimée
-
-## Catégorie
-
-Périphérique / Imprimante

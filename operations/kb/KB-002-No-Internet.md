@@ -1,6 +1,4 @@
-# KB-002 — Diagnostiquer un problème d'accès Internet
-
-## Symptôme
+# KB-002 — Problème d'accès Internet
 
 Le poste ne peut pas accéder à Internet.
 
@@ -8,9 +6,9 @@ Le poste ne peut pas accéder à Internet.
 
 1. Configuration IP
    - ipconfig /all
-   - réseau attendu : 10.10.10.0/24
+   - réseau : 10.10.10.0/24
    - passerelle : 10.10.10.1
-   - DNS du domaine : 10.10.20.10
+   - DNS : 10.10.20.10
 
 2. Passerelle
    - ping 10.10.10.1
@@ -19,19 +17,15 @@ Le poste ne peut pas accéder à Internet.
    - Test-NetConnection 10.10.20.10 -Port 53
    - Resolve-DnsName DC01.corp.rktlab.test -Server 10.10.20.10
 
-4. Accès Internet
+4. Internet
    - Test-NetConnection 1.1.1.1 -Port 443
 
 5. Navigateur
-   - tester l'ouverture d'un site Web
+   - ouvrir un site Web
 
-## Validation
+## Test final
 
 - passerelle accessible
 - DNS interne fonctionnel
-- sortie TCP 443 fonctionnelle
+- TCP 443 fonctionnel
 - navigation Web fonctionnelle
-
-## Catégorie
-
-Réseau / DNS
